@@ -20,6 +20,7 @@ var player: CharacterBody2D = null
 @onready var anchor: Node2D = $Anchor
 
 func _ready():
+	anchor.scale.x = -1
 	hitbox.monitoring = false
 
 	hurtbox.hurt.connect(func(other_hitbox: Hitbox):

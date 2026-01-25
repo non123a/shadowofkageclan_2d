@@ -402,6 +402,7 @@ collision_layer = 2
 script = ExtResource("1_i3pqv")
 stats = SubResource("Resource_dw050")
 state = 0
+jump_amount = 250
 
 [node name="Anchor" type="Node2D" parent="."]
 
@@ -467,5 +468,5 @@ libraries = {
 }
 
 [node name="Camera2D" type="Camera2D" parent="."]
-offset = Vector2(0, -16)
-zoom = Vector2(0.75, 0.75)
+offset = Vector2(0, -60)
+zoom = Vector2(0.8, 0.8)
