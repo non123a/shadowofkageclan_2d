@@ -3,8 +3,8 @@
 [ext_resource type="Script" uid="uid://ppsdkgvmbmov" path="res://enemy.gd" id="1_3yqyl"]
 [ext_resource type="Script" uid="uid://2i8vukneqwu1" path="res://stats.gd" id="2_hb8ge"]
 [ext_resource type="Material" uid="uid://dx10wnlxgh3sb" path="res://effects_material.tres" id="3_e1ltt"]
-[ext_resource type="Texture2D" uid="uid://ctx0v1ampqc8a" path="res://ninja_upper.png" id="4_dxifv"]
-[ext_resource type="Texture2D" uid="uid://bch8duwf6eai4" path="res://ninja_lower.png" id="5_pwjut"]
+[ext_resource type="Texture2D" uid="uid://0u356pug3ux2" path="res://ninja_upper_red.png" id="4_wujgv"]
+[ext_resource type="Texture2D" uid="uid://b08qw02fsidc7" path="res://ninja_lower_red.png" id="5_hb8ge"]
 [ext_resource type="Script" uid="uid://cqxr3go31xf5c" path="res://hitbox.gd" id="6_n0g06"]
 [ext_resource type="Script" uid="uid://qjrnpv4tbvkp" path="res://hurtbox.gd" id="7_ar8e5"]
 
@@ -387,18 +387,22 @@ stats = SubResource("Resource_wujgv")
 
 [node name="Anchor" type="Node2D" parent="."]
 
+[node name="RayCast2D" type="RayCast2D" parent="Anchor"]
+target_position = Vector2(40, 0)
+collision_mask = 3
+
 [node name="SpriteUpper" type="Sprite2D" parent="Anchor"]
 z_index = 1
 material = ExtResource("3_e1ltt")
 position = Vector2(-2, -13)
-texture = ExtResource("4_dxifv")
+texture = ExtResource("4_wujgv")
 offset = Vector2(16, 0)
 hframes = 15
 
 [node name="SpriteLower" type="Sprite2D" parent="Anchor"]
 material = ExtResource("3_e1ltt")
 position = Vector2(-2, -13)
-texture = ExtResource("5_pwjut")
+texture = ExtResource("5_hb8ge")
 offset = Vector2(16, 0)
 hframes = 15
 frame = 6
