@@ -265,12 +265,12 @@ texture = ExtResource("4_2o6r5")
 [sub_resource type="TileSet" id="TileSet_2u3nc"]
 sources/0 = SubResource("TileSetAtlasSource_hiqwa")
 
-[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_036b0"]
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_70uel"]
 texture = ExtResource("4_aqk2v")
 0:0/0 = 0
 0:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
 
-[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_70uel"]
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_2u3nc"]
 texture = ExtResource("4_2o6r5")
 6:1/0 = 0
 7:1/0 = 0
@@ -540,8 +540,8 @@ texture = ExtResource("4_2o6r5")
 
 [sub_resource type="TileSet" id="TileSet_dwbse"]
 physics_layer_0/collision_layer = 1
-sources/0 = SubResource("TileSetAtlasSource_036b0")
-sources/1 = SubResource("TileSetAtlasSource_70uel")
+sources/0 = SubResource("TileSetAtlasSource_70uel")
+sources/1 = SubResource("TileSetAtlasSource_2u3nc")
 
 [node name="World" type="Node2D"]
 script = ExtResource("1_aqk2v")
@@ -569,9 +569,10 @@ position = Vector2(631, 182)
 position = Vector2(508, 228)
 
 [node name="EnemyCannon3" parent="." instance=ExtResource("3_tlwt5")]
-position = Vector2(446, 147)
+position = Vector2(503, 150)
 
 [node name="ParallaxBackground" type="ParallaxBackground" parent="."]
+visible = false
 
 [node name="ParallaxLayer3" type="ParallaxLayer" parent="ParallaxBackground"]
 motion_mirroring = Vector2(640, 0)
@@ -580,9 +581,16 @@ motion_mirroring = Vector2(640, 0)
 position = Vector2(122, 49)
 texture = ExtResource("5_k3n1d")
 
+[node name="ParallaxLayer3_1" type="ParallaxLayer" parent="ParallaxBackground"]
+motion_mirroring = Vector2(640, 0)
+
+[node name="Sprite2D" type="Sprite2D" parent="ParallaxBackground/ParallaxLayer3_1"]
+position = Vector2(119, -11)
+texture = ExtResource("5_k3n1d")
+
 [node name="ParallaxLayer" type="ParallaxLayer" parent="ParallaxBackground"]
 position = Vector2(0, 100)
-motion_scale = Vector2(0.5, 0.5)
+motion_scale = Vector2(0.6, 0.6)
 motion_mirroring = Vector2(640, 0)
 
 [node name="Sprite2D" type="Sprite2D" parent="ParallaxBackground/ParallaxLayer"]
@@ -590,6 +598,7 @@ position = Vector2(122, 49)
 texture = ExtResource("6_2o6r5")
 
 [node name="ParallaxLayer4" type="ParallaxLayer" parent="ParallaxBackground"]
+motion_scale = Vector2(0.7, 0.7)
 motion_mirroring = Vector2(640, 0)
 
 [node name="Sprite2D" type="Sprite2D" parent="ParallaxBackground/ParallaxLayer4"]
@@ -597,6 +606,7 @@ position = Vector2(122, 49)
 texture = ExtResource("7_70uel")
 
 [node name="ParallaxLayer2" type="ParallaxLayer" parent="ParallaxBackground"]
+motion_scale = Vector2(0.5, 0.5)
 motion_mirroring = Vector2(640, 0)
 
 [node name="Sprite2D" type="Sprite2D" parent="ParallaxBackground/ParallaxLayer2"]
@@ -604,6 +614,7 @@ position = Vector2(122, 49)
 texture = ExtResource("8_hiqwa")
 
 [node name="ParallaxLayer5" type="ParallaxLayer" parent="ParallaxBackground"]
+motion_scale = Vector2(0.7, 0.7)
 motion_mirroring = Vector2(640, 0)
 
 [node name="Sprite2D" type="Sprite2D" parent="ParallaxBackground/ParallaxLayer5"]
@@ -611,6 +622,7 @@ position = Vector2(122, 49)
 texture = ExtResource("9_2u3nc")
 
 [node name="ParallaxLayer6" type="ParallaxLayer" parent="ParallaxBackground"]
+motion_scale = Vector2(0.5, 0.5)
 motion_mirroring = Vector2(640, 0)
 
 [node name="Sprite2D" type="Sprite2D" parent="ParallaxBackground/ParallaxLayer6"]
@@ -618,6 +630,8 @@ position = Vector2(122, 49)
 texture = ExtResource("10_udxuc")
 
 [node name="ParallaxLayer7" type="ParallaxLayer" parent="ParallaxBackground"]
+position = Vector2(0.5, 0)
+motion_scale = Vector2(0.6, 0.6)
 motion_mirroring = Vector2(640, 0)
 
 [node name="Sprite2D" type="Sprite2D" parent="ParallaxBackground/ParallaxLayer7"]
@@ -625,6 +639,7 @@ position = Vector2(122, 49)
 texture = ExtResource("11_ikiii")
 
 [node name="ParallaxLayer8" type="ParallaxLayer" parent="ParallaxBackground"]
+motion_scale = Vector2(0.7, 0.7)
 motion_mirroring = Vector2(1560, 0)
 
 [node name="Sprite2D" type="Sprite2D" parent="ParallaxBackground/ParallaxLayer8"]
