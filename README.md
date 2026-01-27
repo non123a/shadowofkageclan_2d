@@ -4,6 +4,9 @@ shadow of kage clan is a 2D game about adventure enemy base recuse comrade, this
 <p align="center">
   <img src="/Screenshot 2026-01-27 at 6.18.28 in the evening.png" width="600">
 </p>
+<p align="center">
+  <img src="/Screenshot 2026-01-27 at 6.18.57 in the evening.png" width="600">
+</p>
 
 
 ## 🎮 Gameplay Video
