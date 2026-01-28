@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="Heartbeast-ninja"
-run/main_scene="uid://b6jqdqmnr2cqf"
+run/main_scene="uid://b5q0y5p2a60jm"
 config/features=PackedStringArray("4.5", "Forward Plus")
 config/icon="res://icon.svg"
 
