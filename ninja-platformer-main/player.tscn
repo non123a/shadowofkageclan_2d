@@ -1,4 +1,4 @@
-[gd_scene load_steps=29 format=3 uid="uid://bl7cbq2ma5mjj"]
+[gd_scene load_steps=30 format=3 uid="uid://bl7cbq2ma5mjj"]
 
 [ext_resource type="Script" uid="uid://b4xqkm8dmmdgk" path="res://player.gd" id="1_i3pqv"]
 [ext_resource type="Script" uid="uid://2i8vukneqwu1" path="res://stats.gd" id="2_1jxqw"]
@@ -7,6 +7,7 @@
 [ext_resource type="Texture2D" uid="uid://bch8duwf6eai4" path="res://ninja_lower.png" id="3_sweqy"]
 [ext_resource type="Script" uid="uid://cqxr3go31xf5c" path="res://hitbox.gd" id="4_hqtel"]
 [ext_resource type="Script" uid="uid://qjrnpv4tbvkp" path="res://hurtbox.gd" id="5_sweqy"]
+[ext_resource type="Script" uid="uid://cm74v21o2dnr6" path="res://camera_2d.gd" id="8_dw050"]
 
 [sub_resource type="Resource" id="Resource_dw050"]
 script = ExtResource("2_1jxqw")
@@ -468,5 +469,5 @@ libraries = {
 }
 
 [node name="Camera2D" type="Camera2D" parent="."]
-offset = Vector2(0, -60)
-zoom = Vector2(0.8, 0.8)
+zoom = Vector2(0.6, 0.6)
+script = ExtResource("8_dw050")
