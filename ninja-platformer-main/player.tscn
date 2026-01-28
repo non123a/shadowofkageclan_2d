@@ -10,7 +10,7 @@
 
 [sub_resource type="Resource" id="Resource_dw050"]
 script = ExtResource("2_1jxqw")
-health = 3
+health = 100
 metadata/_custom_type_script = "uid://2i8vukneqwu1"
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_2hs0m"]
