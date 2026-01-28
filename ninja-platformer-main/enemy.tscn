@@ -375,8 +375,8 @@ _data = {
 &"hitflash": SubResource("Animation_u1c27")
 }
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_wujgv"]
-size = Vector2(166, 26)
+[sub_resource type="CircleShape2D" id="CircleShape2D_wujgv"]
+radius = 77.10383
 
 [node name="enemy" type="CharacterBody2D"]
 z_index = 50
@@ -384,7 +384,7 @@ position = Vector2(0, 3)
 collision_layer = 2
 script = ExtResource("1_3yqyl")
 stats = SubResource("Resource_wujgv")
-attack_cooldown = 2.0
+attack_cooldown = 3.0
 max_speed = 50
 
 [node name="Anchor" type="Node2D" parent="."]
@@ -461,5 +461,5 @@ libraries = {
 collision_mask = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="DetectionArea"]
-position = Vector2(-2, -13)
-shape = SubResource("RectangleShape2D_wujgv")
+position = Vector2(1, -9)
+shape = SubResource("CircleShape2D_wujgv")
