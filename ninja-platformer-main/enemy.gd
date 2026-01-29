@@ -11,6 +11,7 @@ var can_attack := true
 @export var attack_duration := 0.15
 @onready var animation_player_upper: AnimationPlayer = $AnimationPlayerUpper
 @onready var animation_player_lower: AnimationPlayer = $AnimationPlayerLower
+@onready var health_bar: ProgressBar = $Anchor/HealthBar
 
 var state = STATE.IDLE
 var player: CharacterBody2D = null
@@ -19,9 +20,47 @@ var player: CharacterBody2D = null
 @onready var hitbox: Area2D = $Anchor/Hitbox
 @onready var anchor: Node2D = $Anchor
 
+#func _ready():
+	#anchor.scale.x = -1
+	#hitbox.monitoring = false
+	## --- HealthBar setup ---
+	#if stats != null and health_bar:
+		#health_bar.max_value = stats.max_health
+		#health_bar.value = stats.health
+		#health_bar.visible = true
+		#
+		#
+	#hurtbox.hurt.connect(func(other_hitbox: Hitbox):
+		#if stats == null:
+			#push_error("Enemy stats is NULL!")
+			#return
+#
+	#stats.health -= other_hitbox.damage
+	#stats.health = max(stats.health, 0)
+#
+	## Update health bar
+	#if health_bar:
+		#health_bar.value = stats.health
+#
+	#print("Enemy hit! Health:", stats.health)
+#
+	#if stats.health <= 0:
+		#queue_free()
+#
+#
+#
+	#detection_area.body_entered.connect(_on_body_entered)
+	#detection_area.body_exited.connect(_on_body_exited)
+#
 func _ready():
 	anchor.scale.x = -1
 	hitbox.monitoring = false
+
+	# --- HealthBar setup ---
+	if stats != null and health_bar:
+		health_bar.max_value = stats.max_health
+		health_bar.value = stats.health
+		health_bar.visible = true
 
 	hurtbox.hurt.connect(func(other_hitbox: Hitbox):
 		if stats == null:
@@ -29,16 +68,20 @@ func _ready():
 			return
 
 		stats.health -= other_hitbox.damage
+		stats.health = max(stats.health, 0)
+
+		# Update health bar
+		if health_bar:
+			health_bar.value = stats.health
+
 		print("Enemy hit! Health:", stats.health)
 
 		if stats.health <= 0:
 			queue_free()
-		)
-
+	)
 
 	detection_area.body_entered.connect(_on_body_entered)
 	detection_area.body_exited.connect(_on_body_exited)
-
 
 
 func _physics_process(delta):

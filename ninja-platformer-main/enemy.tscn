@@ -1,4 +1,4 @@
-[gd_scene load_steps=31 format=3 uid="uid://rsd74dj400hc"]
+[gd_scene load_steps=33 format=3 uid="uid://rsd74dj400hc"]
 
 [ext_resource type="Script" uid="uid://ppsdkgvmbmov" path="res://enemy.gd" id="1_3yqyl"]
 [ext_resource type="Script" uid="uid://2i8vukneqwu1" path="res://stats.gd" id="2_hb8ge"]
@@ -10,8 +10,15 @@
 
 [sub_resource type="Resource" id="Resource_wujgv"]
 script = ExtResource("2_hb8ge")
-health = 1
+max_health = 3
+health = 3
 metadata/_custom_type_script = "uid://2i8vukneqwu1"
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_wujgv"]
+bg_color = Color(0.02745098, 0.11372549, 0.13333334, 0)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hb8ge"]
+bg_color = Color(0.98251444, 0, 0.15731359, 1)
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_3yqyl"]
 radius = 32.06244
@@ -389,9 +396,15 @@ max_speed = 200
 
 [node name="Anchor" type="Node2D" parent="."]
 
-[node name="RayCast2D" type="RayCast2D" parent="Anchor"]
-target_position = Vector2(40, 0)
-collision_mask = 3
+[node name="HealthBar" type="ProgressBar" parent="Anchor"]
+offset_left = -11.0
+offset_top = -25.0
+offset_right = 11.0
+offset_bottom = -24.0
+theme_override_styles/background = SubResource("StyleBoxFlat_wujgv")
+theme_override_styles/fill = SubResource("StyleBoxFlat_hb8ge")
+max_value = 0.0
+show_percentage = false
 
 [node name="SpriteUpper" type="Sprite2D" parent="Anchor"]
 z_index = 1
@@ -418,6 +431,7 @@ position = Vector2(5, -5)
 target_position = Vector2(2, 0)
 
 [node name="Hitbox" type="Area2D" parent="Anchor"]
+visible = false
 collision_layer = 0
 collision_mask = 8
 script = ExtResource("6_n0g06")
@@ -439,6 +453,7 @@ position = Vector2(0, -11)
 shape = SubResource("RectangleShape2D_2hs0m")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+visible = false
 position = Vector2(0, -10)
 shape = SubResource("RectangleShape2D_aqk2v")
 
@@ -458,6 +473,7 @@ libraries = {
 }
 
 [node name="DetectionArea" type="Area2D" parent="."]
+visible = false
 collision_mask = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="DetectionArea"]
