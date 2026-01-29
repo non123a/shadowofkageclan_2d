@@ -15,6 +15,7 @@ enum STATE { MOVE, CLIMB, HIT }
 @export var jump_amount: = 200
 
 var coyote_time: = 0.0
+@onready var health_bar: ProgressBar = $Camera2D/PlayerHealthUI/HealthBar
 
 @onready var anchor: Node2D = $Anchor
 @onready var sprite_upper: Sprite2D = $Anchor/SpriteUpper
@@ -30,6 +31,16 @@ var coyote_time: = 0.0
 @onready var camera_2d: Camera2D = $Camera2D
 
 func _ready() -> void:
+	# --- Health bar setup ---
+	if stats and health_bar:
+		health_bar.max_value = stats.max_health
+		health_bar.value = stats.health
+		stats.health_changed.connect(_on_health_changed)
+
+	stats.no_health.connect(func():
+		camera_2d.reparent(get_tree().current_scene)
+		queue_free()
+	)
 	stats.no_health.connect(func():
 		camera_2d.reparent(get_tree().current_scene)
 		queue_free()
@@ -59,6 +70,8 @@ func _ready() -> void:
 		animation_player_lower.play("jump")
 		effects_animation_player.play("hitflash")
 		stats.health -= other_hitbox.damage
+		if health_bar:
+			health_bar.value = stats.health
 	)
 	
 
@@ -158,4 +171,19 @@ func should_wall_climb() -> bool:
 		ray_cast_upper.is_colliding()
 		and ray_cast_lower.is_colliding()
 		and not is_on_floor()
+	)
+func _on_health_changed(current: int, max: int) -> void:
+	if not health_bar:
+		return
+
+	health_bar.max_value = max
+
+	var tween := create_tween()
+	tween.set_trans(Tween.TRANS_SINE)
+	tween.set_ease(Tween.EASE_OUT)
+	tween.tween_property(
+		health_bar,
+		"value",
+		current,
+		0.25
 	)
