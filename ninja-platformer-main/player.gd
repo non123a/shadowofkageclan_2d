@@ -1,6 +1,18 @@
 extends CharacterBody2D
 
-enum STATE { MOVE, CLIMB, HIT }
+#enum STATE { MOVE, CLIMB, HIT }
+enum STATE { MOVE, CLIMB, HIT, DASH }
+#add dash
+@export var dash_speed := 300
+@export var dash_duration := 0.1
+@export var dash_cooldown := 1
+
+var can_dash := true
+var dash_direction := 1
+
+
+
+
 
 @export var stats: Stats
 @export var state: = STATE.CLIMB
@@ -109,7 +121,14 @@ func _physics_process(delta: float) -> void:
 			if should_wall_climb():
 				animation_player_upper.play("hang")
 				state = STATE.CLIMB
-			
+			if Input.is_action_just_pressed("dash") and can_dash:
+				start_dash()
+				return
+		STATE.DASH:
+			velocity.y = 0
+			velocity.x = dash_direction * dash_speed
+			move_and_slide()
+
 		STATE.CLIMB:
 			var wall_normal = get_wall_normal()
 			
@@ -172,6 +191,7 @@ func should_wall_climb() -> bool:
 		and ray_cast_lower.is_colliding()
 		and not is_on_floor()
 	)
+@warning_ignore("shadowed_global_identifier")
 func _on_health_changed(current: int, max: int) -> void:
 	if not health_bar:
 		return
@@ -187,3 +207,142 @@ func _on_health_changed(current: int, max: int) -> void:
 		current,
 		0.25
 	)
+
+
+
+
+#func start_dash() -> void:
+	#if not can_dash:
+		#return
+#
+	#can_dash = false
+	#state = STATE.DASH
+#
+	## Invincibility
+	#hurtbox.is_invincible = true
+	#spawn_afterimage()
+#
+	## Facing direction
+	#var dir3: int = sign(anchor.scale.x)
+	#if dir3 == 0:
+		#dir3 = 1
+#
+	## Teleport distance
+	#var dash_distance: float = 80.0
+#
+	## TELEPORT
+	#global_position.x += dir3 * dash_distance
+#
+	## Small pause for impact
+	#await get_tree().create_timer(0.05).timeout
+#
+	## End dash
+	#state = STATE.MOVE
+	#hurtbox.is_invincible = false
+#
+	## Cooldown
+	#await get_tree().create_timer(dash_cooldown).timeout
+	#can_dash = true
+#func start_dash() -> void:
+	#if not can_dash:
+		#return
+#
+	#can_dash = false
+	#state = STATE.DASH
+	#hurtbox.is_invincible = true
+#
+	#var dir: int = sign(anchor.scale.x)
+	#if dir == 0:
+		#dir = 1
+#
+	#var dash_distance: float = 80.0
+	#var dash_frames: int = 10
+	#var dash_step: float = dash_distance / dash_frames
+	#var frame_delay: float = 0.01
+#
+	## Optional: hide real body during dash
+	#anchor.visible = false
+#
+	#for i in range(dash_frames):
+		## Move a little
+		#global_position.x += dir * dash_step
+#
+		## Spawn one frame
+		#spawn_afterimage()
+#
+		## Wait one frame slice
+		#await get_tree().create_timer(frame_delay).timeout
+#
+	## Reappear at the end
+	#anchor.visible = true
+#
+	#state = STATE.MOVE
+	#hurtbox.is_invincible = false
+#
+	#await get_tree().create_timer(dash_cooldown).timeout
+	#can_dash = true
+
+func start_dash() -> void:
+	if not can_dash:
+		return
+
+	can_dash = false
+	state = STATE.DASH
+	hurtbox.is_invincible = true
+
+	var dir: int = sign(anchor.scale.x)
+	if dir == 0:
+		dir = 1
+
+	var dash_distance: float = 80.0
+	var dash_frames: int = 10
+	var dash_step: float = dash_distance / dash_frames
+	var frame_delay: float = 0.01
+
+	for i in range(dash_frames):
+		# Spawn clone FIRST (while anchor is visible)
+		spawn_afterimage()
+
+		# Then move
+		global_position.x += dir * dash_step
+
+		await get_tree().create_timer(frame_delay).timeout
+
+	state = STATE.MOVE
+	hurtbox.is_invincible = false
+
+	await get_tree().create_timer(dash_cooldown).timeout
+	can_dash = true
+
+#func spawn_afterimage() -> void:
+	#var ghost := anchor.duplicate()
+	#ghost.modulate = Color(1, 1, 1, 0.5)
+	#ghost.scale = anchor.scale
+	#ghost.z_index = anchor.z_index - 1
+#
+	#get_parent().add_child(ghost)
+	#ghost.global_position = anchor.global_position
+#
+	#var tween := create_tween()
+	#tween.tween_property(ghost, "modulate:a", 0.0, 0.15)
+	#tween.tween_callback(ghost.queue_free)
+func spawn_afterimage() -> void:
+	var ghost: Node2D = anchor.duplicate()
+
+	# FORCE visibility (important!)
+	ghost.visible = true
+
+	# Visual style
+	ghost.modulate = Color(1, 1, 1, 0.5)
+	ghost.scale = anchor.scale
+	ghost.z_index = anchor.z_index - 1
+
+	# Add to world (not player)
+	get_tree().current_scene.add_child(ghost)
+
+	ghost.global_position = anchor.global_position
+
+	# Fade out + delete
+	var tween := create_tween()
+	tween.tween_property(ghost, "modulate:a", 0.0, 0.15)
+	tween.tween_callback(ghost.queue_free)

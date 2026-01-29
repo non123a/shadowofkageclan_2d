@@ -408,8 +408,18 @@ border_color = Color(0.57254905, 0.06666667, 0.05490196, 1)
 z_index = 50
 collision_layer = 2
 script = ExtResource("1_i3pqv")
+dash_speed = null
+dash_duration = null
+dash_cooldown = null
 stats = SubResource("Resource_dw050")
 state = 0
+max_speed = null
+acceleration = null
+air_acceleration = null
+friction = null
+air_friction = null
+up_gravity = null
+down_gravity = null
 jump_amount = 250
 
 [node name="Anchor" type="Node2D" parent="."]
@@ -478,6 +488,7 @@ libraries = {
 [node name="Camera2D" type="Camera2D" parent="."]
 zoom = Vector2(0.6, 0.6)
 script = ExtResource("8_dw050")
+follow_speed = 16.0
 
 [node name="PlayerHealthUI" type="Control" parent="Camera2D"]
 layout_mode = 3
