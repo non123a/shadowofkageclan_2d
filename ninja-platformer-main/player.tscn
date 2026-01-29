@@ -407,19 +407,13 @@ border_color = Color(0.57254905, 0.06666667, 0.05490196, 1)
 [node name="Player" type="CharacterBody2D" groups=["player"]]
 z_index = 50
 collision_layer = 2
+collision_mask = 33
 script = ExtResource("1_i3pqv")
-dash_speed = null
-dash_duration = null
-dash_cooldown = null
+dash_speed = 200
+dash_duration = 0.05
+dash_cooldown = 2
 stats = SubResource("Resource_dw050")
 state = 0
-max_speed = null
-acceleration = null
-air_acceleration = null
-friction = null
-air_friction = null
-up_gravity = null
-down_gravity = null
 jump_amount = 250
 
 [node name="Anchor" type="Node2D" parent="."]

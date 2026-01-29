@@ -24,7 +24,7 @@ bg_color = Color(0.98251444, 0, 0.15731359, 1)
 radius = 32.06244
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_2hs0m"]
-size = Vector2(8, 18)
+size = Vector2(17, 26.5)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_aqk2v"]
 size = Vector2(12, 20)
@@ -389,6 +389,7 @@ size = Vector2(137, 31)
 z_index = 50
 position = Vector2(0, 3)
 collision_layer = 2
+collision_mask = 33
 script = ExtResource("1_3yqyl")
 stats = SubResource("Resource_wujgv")
 attack_cooldown = 2.0
@@ -449,7 +450,7 @@ script = ExtResource("7_ar8e5")
 metadata/_custom_type_script = "uid://qjrnpv4tbvkp"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Anchor/Hurtbox"]
-position = Vector2(0, -11)
+position = Vector2(-1, -12)
 shape = SubResource("RectangleShape2D_2hs0m")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
@@ -473,6 +474,7 @@ libraries = {
 }
 
 [node name="DetectionArea" type="Area2D" parent="."]
+visible = false
 collision_mask = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="DetectionArea"]
