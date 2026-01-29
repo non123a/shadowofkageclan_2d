@@ -1,8 +1,9 @@
-[gd_scene load_steps=19 format=4 uid="uid://b6jqdqmnr2cqf"]
+[gd_scene load_steps=20 format=4 uid="uid://b6jqdqmnr2cqf"]
 
 [ext_resource type="Script" uid="uid://dephygc4nk1vv" path="res://world.gd" id="1_aqk2v"]
 [ext_resource type="PackedScene" uid="uid://bl7cbq2ma5mjj" path="res://player.tscn" id="1_fj7yv"]
 [ext_resource type="Texture2D" uid="uid://d26a1tjeo4awy" path="res://Tiles and BG/DeadForest Tileset32x32.png" id="4_2o6r5"]
+[ext_resource type="PackedScene" uid="uid://2jhppfejch36" path="res://boss.tscn" id="4_70uel"]
 [ext_resource type="Texture2D" uid="uid://q1ggnayh8a6r" path="res://graybox.png" id="4_aqk2v"]
 [ext_resource type="Texture2D" uid="uid://dik0bnqpg5v87" path="res://Tiles and BG/DeadForest_BG_0.png" id="5_k3n1d"]
 [ext_resource type="Texture2D" uid="uid://11vudis1ihtt" path="res://Tiles and BG/Clouds_Mid.png" id="6_2o6r5"]
@@ -550,6 +551,10 @@ position = Vector2(374, 183)
 
 [node name="Player" parent="." instance=ExtResource("1_fj7yv")]
 position = Vector2(74, 229)
+jump_amount = 200
+
+[node name="Boss" parent="." instance=ExtResource("4_70uel")]
+position = Vector2(641, 182)
 
 [node name="TileMapBackground" type="TileMap" parent="."]
 tile_set = SubResource("TileSet_2u3nc")

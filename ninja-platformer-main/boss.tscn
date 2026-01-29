@@ -1,17 +1,17 @@
-[gd_scene load_steps=33 format=3 uid="uid://rsd74dj400hc"]
+[gd_scene load_steps=33 format=3 uid="uid://2jhppfejch36"]
 
-[ext_resource type="Script" uid="uid://ppsdkgvmbmov" path="res://enemy.gd" id="1_3yqyl"]
-[ext_resource type="Script" uid="uid://2i8vukneqwu1" path="res://stats.gd" id="2_hb8ge"]
-[ext_resource type="Material" uid="uid://dx10wnlxgh3sb" path="res://effects_material.tres" id="3_e1ltt"]
-[ext_resource type="Texture2D" uid="uid://0u356pug3ux2" path="res://ninja_upper_red.png" id="4_wujgv"]
-[ext_resource type="Texture2D" uid="uid://b08qw02fsidc7" path="res://ninja_lower_red.png" id="5_hb8ge"]
-[ext_resource type="Script" uid="uid://cqxr3go31xf5c" path="res://hitbox.gd" id="6_n0g06"]
-[ext_resource type="Script" uid="uid://qjrnpv4tbvkp" path="res://hurtbox.gd" id="7_ar8e5"]
+[ext_resource type="Script" uid="uid://capb4qwvm0x6g" path="res://boss.gd" id="1_we8h1"]
+[ext_resource type="Script" uid="uid://2i8vukneqwu1" path="res://stats.gd" id="2_ef0k6"]
+[ext_resource type="Material" uid="uid://dx10wnlxgh3sb" path="res://effects_material.tres" id="2_kvofc"]
+[ext_resource type="Texture2D" uid="uid://c28vr0t67nrwc" path="res://ninja_upper_red_black.png" id="4_kles1"]
+[ext_resource type="Script" uid="uid://cqxr3go31xf5c" path="res://hitbox.gd" id="5_kles1"]
+[ext_resource type="Texture2D" uid="uid://djse2f5m8h2de" path="res://ninja_lower_red_black.png" id="5_kvofc"]
+[ext_resource type="Script" uid="uid://qjrnpv4tbvkp" path="res://hurtbox.gd" id="6_etj48"]
 
-[sub_resource type="Resource" id="Resource_wujgv"]
-script = ExtResource("2_hb8ge")
-max_health = 1
-health = 1
+[sub_resource type="Resource" id="Resource_etj48"]
+script = ExtResource("2_ef0k6")
+max_health = 5
+health = 5
 metadata/_custom_type_script = "uid://2i8vukneqwu1"
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_wujgv"]
@@ -382,24 +382,24 @@ _data = {
 &"hitflash": SubResource("Animation_u1c27")
 }
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_wujgv"]
-size = Vector2(137, 31)
+[sub_resource type="CircleShape2D" id="CircleShape2D_wujgv"]
+radius = 77.10383
 
-[node name="enemy" type="CharacterBody2D"]
+[node name="Boss" type="CharacterBody2D"]
 z_index = 50
 position = Vector2(0, 3)
 collision_layer = 2
-script = ExtResource("1_3yqyl")
-stats = SubResource("Resource_wujgv")
+script = ExtResource("1_we8h1")
+stats = SubResource("Resource_etj48")
 attack_cooldown = 2.0
-max_speed = 100
+max_speed = 150
 
 [node name="Anchor" type="Node2D" parent="."]
 
 [node name="HealthBar" type="ProgressBar" parent="Anchor"]
-offset_left = -11.0
-offset_top = -25.0
-offset_right = 11.0
+offset_left = -12.0
+offset_top = -26.0
+offset_right = 12.0
 offset_bottom = -24.0
 theme_override_styles/background = SubResource("StyleBoxFlat_wujgv")
 theme_override_styles/fill = SubResource("StyleBoxFlat_hb8ge")
@@ -408,16 +408,16 @@ show_percentage = false
 
 [node name="SpriteUpper" type="Sprite2D" parent="Anchor"]
 z_index = 1
-material = ExtResource("3_e1ltt")
+material = ExtResource("2_kvofc")
 position = Vector2(-2, -13)
-texture = ExtResource("4_wujgv")
+texture = ExtResource("4_kles1")
 offset = Vector2(16, 0)
 hframes = 15
 
 [node name="SpriteLower" type="Sprite2D" parent="Anchor"]
-material = ExtResource("3_e1ltt")
+material = ExtResource("2_kvofc")
 position = Vector2(-2, -13)
-texture = ExtResource("5_hb8ge")
+texture = ExtResource("5_kvofc")
 offset = Vector2(16, 0)
 hframes = 15
 frame = 6
@@ -434,7 +434,7 @@ target_position = Vector2(2, 0)
 visible = false
 collision_layer = 0
 collision_mask = 8
-script = ExtResource("6_n0g06")
+script = ExtResource("5_kles1")
 metadata/_custom_type_script = "uid://cqxr3go31xf5c"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Anchor/Hitbox"]
@@ -445,7 +445,7 @@ metadata/_edit_group_ = true
 [node name="Hurtbox" type="Area2D" parent="Anchor"]
 collision_layer = 16
 collision_mask = 0
-script = ExtResource("7_ar8e5")
+script = ExtResource("6_etj48")
 metadata/_custom_type_script = "uid://qjrnpv4tbvkp"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Anchor/Hurtbox"]
@@ -473,8 +473,9 @@ libraries = {
 }
 
 [node name="DetectionArea" type="Area2D" parent="."]
+visible = false
 collision_mask = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="DetectionArea"]
-position = Vector2(0.5, -14.5)
-shape = SubResource("RectangleShape2D_wujgv")
+position = Vector2(1, -9)
+shape = SubResource("CircleShape2D_wujgv")
