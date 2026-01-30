@@ -1,6 +1,29 @@
 extends CharacterBody2D
 
-enum STATE { IDLE, CHASE, ATTACK, HIT }
+enum STATE { IDLE, PATROL, CHASE, ATTACK, HIT }
+
+@export var patrol_range: float = 80.0
+@export var patrol_speed: float = 40.0
+
+@export var min_wait_time: float = 0.6
+@export var max_wait_time: float = 1.4
+
+@export var min_look_count: int = 1
+@export var max_look_count: int = 2
+
+var left_limit: float
+var right_limit: float
+var patrol_dir: int = 1
+
+var patrol_state := "walk"  # "walk", "wait"
+var wait_timer: float = 0.0
+var look_timer: float = 0.0
+var looks_left: int = 0
+
+
+
+
+
 @onready var hurtbox: Hurtbox = $Anchor/Hurtbox
 @export var stats: Stats
 @export var attack_cooldown := 0.8  # seconds
@@ -20,42 +43,22 @@ var player: CharacterBody2D = null
 @onready var hitbox: Area2D = $Anchor/Hitbox
 @onready var anchor: Node2D = $Anchor
 
-#func _ready():
-	#anchor.scale.x = -1
-	#hitbox.monitoring = false
-	## --- HealthBar setup ---
-	#if stats != null and health_bar:
-		#health_bar.max_value = stats.max_health
-		#health_bar.value = stats.health
-		#health_bar.visible = true
-		#
-		#
-	#hurtbox.hurt.connect(func(other_hitbox: Hitbox):
-		#if stats == null:
-			#push_error("Enemy stats is NULL!")
-			#return
-#
-	#stats.health -= other_hitbox.damage
-	#stats.health = max(stats.health, 0)
-#
-	## Update health bar
-	#if health_bar:
-		#health_bar.value = stats.health
-#
-	#print("Enemy hit! Health:", stats.health)
-#
-	#if stats.health <= 0:
-		#queue_free()
-#
-#
-#
-	#detection_area.body_entered.connect(_on_body_entered)
-	#detection_area.body_exited.connect(_on_body_exited)
-#
 func _ready():
 	anchor.scale.x = -1
 	hitbox.monitoring = false
+	
+	left_limit = global_position.x - patrol_range
+	right_limit = global_position.x + patrol_range
 
+	# Random initial direction
+	patrol_dir = -1 if randf() < 0.5 else 1
+
+	state = STATE.PATROL
+
+	randomize()
+
+	
+	
 	# --- HealthBar setup ---
 	if stats != null and health_bar:
 		health_bar.max_value = stats.max_health
@@ -83,14 +86,28 @@ func _ready():
 	detection_area.body_entered.connect(_on_body_entered)
 	detection_area.body_exited.connect(_on_body_exited)
 
-
+#func _physics_process(delta):
+	#if not is_on_floor():
+		#velocity.y += gravity * delta
+#
+	#match state:
+		#STATE.IDLE:
+			#velocity.x = 0
+#
+		#STATE.CHASE:
+			#chase_player()
+#
+		#STATE.ATTACK:
+			#velocity.x = 0
+#
+	#move_and_slide()
 func _physics_process(delta):
 	if not is_on_floor():
 		velocity.y += gravity * delta
 
 	match state:
-		STATE.IDLE:
-			velocity.x = 0
+		STATE.PATROL:
+			patrol(delta)
 
 		STATE.CHASE:
 			chase_player()
@@ -99,37 +116,7 @@ func _physics_process(delta):
 			velocity.x = 0
 
 	move_and_slide()
-#func chase_player():
-	#if not player:
-		#state = STATE.IDLE
-		#if animation_player_lower:
-			#animation_player_lower.play("stand")
-		#return
-#
-	## Player exists → chase
-	#if animation_player_lower:
-		#animation_player_lower.play("run")
-#
-	#var dir = sign(player.global_position.x - global_position.x)
-	#anchor.scale.x = dir
-	#velocity.x = dir * max_speed
-#
-	#if can_attack \
-	#and state != STATE.ATTACK \
-	#and global_position.distance_to(player.global_position) <= attack_range:
-		#state = STATE.ATTACK
-		#attack()
-#
-	#var dir1 = sign(player.global_position.x - global_position.x)
-	#anchor.scale.x = dir
-	#velocity.x = dir1 * max_speed
-#
-	## ONLY start attack if allowed
-	#if can_attack \
-	#and state != STATE.ATTACK \
-	#and global_position.distance_to(player.global_position) <= attack_range:
-		#state = STATE.ATTACK
-		#attack()
+
 func chase_player():
 	if not player:
 		state = STATE.IDLE
@@ -202,108 +189,6 @@ func attack():
 	can_attack = true
 	state = STATE.CHASE
 
-#func attack():
-	#can_attack = false
-	#state = STATE.ATTACK
-	#velocity.x = 0
-#
-	## Lock facing direction
-	#if player:
-		#anchor.scale.x = sign(player.global_position.x - global_position.x)
-#
-	## Play attack animation ONCE
-	#if animation_player_upper:
-		#animation_player_upper.play("attack")
-#
-	## Enable hitbox during swing
-	#hitbox.monitoring = true
-	#await get_tree().create_timer(0.12).timeout
-	#hitbox.monitoring = false
-#
-	## WAIT for attack animation to finish
-	#if animation_player_upper:
-		#await animation_player_upper.animation_finished
-#
-	## Reset upper animation to match lower body
-	#if animation_player_lower:
-		#animation_player_upper.play(animation_player_lower.current_animation)
-#
-	## Cooldown before next attack
-	#await get_tree().create_timer(attack_cooldown).timeout
-	#can_attack = true
-	#state = STATE.CHASE
-#
-#
-##func chase_player():
-	##if not player:
-		##state = STATE.IDLE
-		##return
-##
-	##var dir = sign(player.global_position.x - global_position.x)
-	##anchor.scale.x = dir
-	##velocity.x = dir * max_speed
-##
-	##if global_position.distance_to(player.global_position) <= attack_range:
-		##state = STATE.ATTACK
-		##attack()
-##func attack():
-	##can_attack = false
-	##velocity.x = 0
-##
-	### Face player
-	##if player:
-		##anchor.scale.x = sign(player.global_position.x - global_position.x)
-##
-	### Play attack animation
-	##if animation_player_upper:
-		##animation_player_upper.play("attack")
-##
-	### HITBOX TIMING (short + precise)
-	##hitbox.monitoring = true
-	##await get_tree().create_timer(0.12).timeout
-	##hitbox.monitoring = false
-##
-	### Cooldown before next attack
-	##await get_tree().create_timer(attack_cooldown).timeout
-	##can_attack = true
-	##state = STATE.CHASE
-##
-###func attack():
-	###hitbox.monitoring = true
-	###await get_tree().create_timer(attack_duration).timeout
-	###hitbox.monitoring = false
-###
-	###if player:
-		###state = STATE.CHASE
-	###else:
-		###state = STATE.IDLE
-###func attack():
-	#### Face player
-	###if player:
-		###anchor.scale.x = sign(player.global_position.x - global_position.x)
-###
-	#### Play sword animation
-	###if animation_player_upper:
-		###animation_player_upper.play("attack")
-###
-	###hitbox.monitoring = true
-	###await get_tree().create_timer(attack_duration).timeout
-	###hitbox.monitoring = false
-###
-	###state = STATE.CHASE
-###
-###
-####func _on_body_entered(body):
-	####if body.name == "Player":
-		####player = body
-		####state = STATE.CHASE
-		####
-####func _on_body_entered(body):
-	####print("Detected body:", body.name)
-####
-	####if body.name == "player":
-		####player = body
-		####state = STATE.CHASE
 func _on_body_entered(body):
 	print("Detected body:", body.name)
 
@@ -315,4 +200,51 @@ func _on_body_entered(body):
 func _on_body_exited(body):
 	if body == player:
 		player = null
-		state = STATE.IDLE
+		state = STATE.PATROL
+		
+func start_patrol_wait() -> void:
+	patrol_state = "wait"
+	velocity.x = 0
+
+	wait_timer = randf_range(min_wait_time, max_wait_time)
+	looks_left = randi_range(min_look_count, max_look_count)
+	look_timer = wait_timer / max(1, looks_left * 2)
+
+func patrol(delta: float) -> void:
+	match patrol_state:
+
+		# ================= WALK =================
+		"walk":
+			velocity.x = patrol_dir * patrol_speed
+			anchor.scale.x = patrol_dir
+
+			if animation_player_lower and animation_player_lower.current_animation != "run":
+				animation_player_lower.play("run")
+
+			# Hit patrol edge?
+			if patrol_dir == -1 and global_position.x <= left_limit:
+				start_patrol_wait()
+			elif patrol_dir == 1 and global_position.x >= right_limit:
+				start_patrol_wait()
+
+		# ================= WAIT / LOOK =================
+		"wait":
+			velocity.x = 0
+
+			if animation_player_lower and animation_player_lower.current_animation != "stand":
+				animation_player_lower.play("stand")
+
+			wait_timer -= delta
+			look_timer -= delta
+
+			# Look left/right
+			if look_timer <= 0.0 and looks_left > 0:
+				patrol_dir *= -1
+				anchor.scale.x = patrol_dir
+				looks_left -= 1
+				look_timer = randf_range(0.2, 0.4)
+
+			# Resume walking
+			if wait_timer <= 0.0:
+				patrol_dir *= -1
+				patrol_state = "walk"

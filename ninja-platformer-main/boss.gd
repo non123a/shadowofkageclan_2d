@@ -5,6 +5,11 @@ enum STATE { IDLE, CHASE, ATTACK, HIT }
 @export var stats: Stats
 @export var attack_cooldown := 0.5 # seconds
 var can_attack := true
+
+@export var knockback_force := 120.0
+@export var knockback_up := 80.0
+
+
 @export var max_speed := 120
 @export var gravity := 900
 @export var attack_range := 50
@@ -34,7 +39,17 @@ func _ready():
 		if stats == null:
 			push_error("Enemy stats is NULL!")
 			return
+		# Knockback (same style as player)
+		var x_direction = sign(other_hitbox.global_position.direction_to(global_position).x)
+		if x_direction == 0:
+			x_direction = -1
 
+		velocity.x = x_direction * knockback_force
+		velocity.y = -knockback_up
+		state = STATE.HIT
+
+
+		@warning_ignore("narrowing_conversion")
 		stats.health -= other_hitbox.damage
 		stats.health = max(stats.health, 0)
 
@@ -65,6 +80,17 @@ func _physics_process(delta):
 
 		STATE.ATTACK:
 			velocity.x = 0
+		STATE.HIT:
+			# Apply gravity manually
+			if not is_on_floor():
+				velocity.y += gravity * delta
+
+			move_and_slide()
+
+			# Recover once grounded
+			if is_on_floor():
+				state = STATE.CHASE
+
 
 	move_and_slide()
 	#if not player:
