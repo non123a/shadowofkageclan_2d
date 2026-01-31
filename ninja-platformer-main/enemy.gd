@@ -5,6 +5,9 @@ enum STATE { IDLE, PATROL, CHASE, ATTACK, HIT }
 @export var patrol_range: float = 80.0
 @export var patrol_speed: float = 40.0
 
+@export var first_attack_delay := 0.5
+var first_attack_ready := false
+
 @export var min_wait_time: float = 0.6
 @export var max_wait_time: float = 1.4
 
@@ -19,10 +22,6 @@ var patrol_state := "walk"  # "walk", "wait"
 var wait_timer: float = 0.0
 var look_timer: float = 0.0
 var looks_left: int = 0
-
-
-
-
 
 @onready var hurtbox: Hurtbox = $Anchor/Hurtbox
 @export var stats: Stats
@@ -86,21 +85,6 @@ func _ready():
 	detection_area.body_entered.connect(_on_body_entered)
 	detection_area.body_exited.connect(_on_body_exited)
 
-#func _physics_process(delta):
-	#if not is_on_floor():
-		#velocity.y += gravity * delta
-#
-	#match state:
-		#STATE.IDLE:
-			#velocity.x = 0
-#
-		#STATE.CHASE:
-			#chase_player()
-#
-		#STATE.ATTACK:
-			#velocity.x = 0
-#
-	#move_and_slide()
 func _physics_process(delta):
 	if not is_on_floor():
 		velocity.y += gravity * delta
@@ -148,9 +132,10 @@ func chase_player():
 			animation_player_lower.play("stand")
 
 	# Attack ONLY when cooldown finishes
-	if can_attack and state != STATE.ATTACK:
+	if can_attack and first_attack_ready and state != STATE.ATTACK:
 		state = STATE.ATTACK
 		attack()
+		
 func attack():
 	can_attack = false
 	state = STATE.ATTACK
@@ -188,6 +173,10 @@ func attack():
 
 	can_attack = true
 	state = STATE.CHASE
+	
+func start_first_attack_delay() -> void:
+	await get_tree().create_timer(first_attack_delay).timeout
+	first_attack_ready = true
 
 func _on_body_entered(body):
 	print("Detected body:", body.name)
@@ -195,7 +184,14 @@ func _on_body_entered(body):
 	if body is CharacterBody2D and body.is_in_group("player"):
 		player = body
 		state = STATE.CHASE
-
+		# 🔥 IMPORTANT: cancel patrol logic
+		patrol_state = "walk"
+		wait_timer = 0.0
+		look_timer = 0.0
+		looks_left = 0
+		
+		first_attack_ready = false
+		start_first_attack_delay()
 
 func _on_body_exited(body):
 	if body == player:

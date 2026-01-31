@@ -641,6 +641,7 @@ tile_map_data = PackedByteArray("AAAAAAgAAQAKAAkAAAAAAAkAAQAKAAoAAAAAAAoAAQAIAAM
 tile_set = SubResource("TileSet_dwbse")
 
 [node name="ParallaxBackground" type="ParallaxBackground" parent="."]
+visible = false
 scale = Vector2(1.3, 1.3)
 transform = Transform2D(1.3, 0, 0, 1.3, 0, 0)
 
@@ -746,10 +747,6 @@ attack_cooldown = 1.0
 
 [node name="Boss3" parent="." instance=ExtResource("4_70uel")]
 position = Vector2(2242, 226)
-attack_cooldown = 1.0
-
-[node name="Boss4" parent="." instance=ExtResource("4_70uel")]
-position = Vector2(137, 225)
 attack_cooldown = 1.0
 
 [node name="enemy4" parent="." instance=ExtResource("14_70uel")]
