@@ -93,36 +93,7 @@ func _physics_process(delta):
 
 
 	move_and_slide()
-	#if not player:
-		#state = STATE.IDLE
-		#if animation_player_lower:
-			#animation_player_lower.play("stand")
-		#return
-#
-	## Player exists → chase
-	#if animation_player_lower:
-		#animation_player_lower.play("run")
-#
-	#var dir = sign(player.global_position.x - global_position.x)
-	#anchor.scale.x = dir
-	#velocity.x = dir * max_speed
-#
-	#if can_attack \
-	#and state != STATE.ATTACK \
-	#and global_position.distance_to(player.global_position) <= attack_range:
-		#state = STATE.ATTACK
-		#attack()
-#
-	#var dir1 = sign(player.global_position.x - global_position.x)
-	#anchor.scale.x = dir
-	#velocity.x = dir1 * max_speed
-#
-	## ONLY start attack if allowed
-	#if can_attack \
-	#and state != STATE.ATTACK \
-	#and global_position.distance_to(player.global_position) <= attack_range:
-		#state = STATE.ATTACK
-		#attack()
+
 func chase_player():
 	if not player:
 		state = STATE.IDLE
@@ -195,116 +166,19 @@ func attack():
 	can_attack = true
 	state = STATE.CHASE
 
-	#can_attack = false
-	#state = STATE.ATTACK
-	#velocity.x = 0
-#
-	## Lock facing direction
-	#if player:
-		#anchor.scale.x = sign(player.global_position.x - global_position.x)
-#
-	## Play attack animation ONCE
-	#if animation_player_upper:
-		#animation_player_upper.play("attack")
-#
-	## Enable hitbox during swing
-	#hitbox.monitoring = true
-	#await get_tree().create_timer(0.12).timeout
-	#hitbox.monitoring = false
-#
-	## WAIT for attack animation to finish
-	#if animation_player_upper:
-		#await animation_player_upper.animation_finished
-#
-	## Reset upper animation to match lower body
-	#if animation_player_lower:
-		#animation_player_upper.play(animation_player_lower.current_animation)
-#
-	## Cooldown before next attack
-	#await get_tree().create_timer(attack_cooldown).timeout
-	#can_attack = true
-	#state = STATE.CHASE
-#
-#
-##func chase_player():
-	##if not player:
-		##state = STATE.IDLE
-		##return
-##
-	##var dir = sign(player.global_position.x - global_position.x)
-	##anchor.scale.x = dir
-	##velocity.x = dir * max_speed
-##
-	##if global_position.distance_to(player.global_position) <= attack_range:
-		##state = STATE.ATTACK
-		##attack()
-##func attack():
-	##can_attack = false
-	##velocity.x = 0
-##
-	### Face player
-	##if player:
-		##anchor.scale.x = sign(player.global_position.x - global_position.x)
-##
-	### Play attack animation
-	##if animation_player_upper:
-		##animation_player_upper.play("attack")
-##
-	### HITBOX TIMING (short + precise)
-	##hitbox.monitoring = true
-	##await get_tree().create_timer(0.12).timeout
-	##hitbox.monitoring = false
-##
-	### Cooldown before next attack
-	##await get_tree().create_timer(attack_cooldown).timeout
-	##can_attack = true
-	##state = STATE.CHASE
-##
-###func attack():
-	###hitbox.monitoring = true
-	###await get_tree().create_timer(attack_duration).timeout
-	###hitbox.monitoring = false
-###
-	###if player:
-		###state = STATE.CHASE
-	###else:
-		###state = STATE.IDLE
-###func attack():
-	#### Face player
-	###if player:
-		###anchor.scale.x = sign(player.global_position.x - global_position.x)
-###
-	#### Play sword animation
-	###if animation_player_upper:
-		###animation_player_upper.play("attack")
-###
-	###hitbox.monitoring = true
-	###await get_tree().create_timer(attack_duration).timeout
-	###hitbox.monitoring = false
-###
-	###state = STATE.CHASE
-###
-###
-####func _on_body_entered(body):
-	####if body.name == "Player":
-		####player = body
-		####state = STATE.CHASE
-		####
-####func _on_body_entered(body):
-	####print("Detected body:", body.name)
-####
-	####if body.name == "player":
-		####player = body
-		####state = STATE.CHASE
 func _on_body_entered(body):
 	print("Detected body:", body.name)
 
 	if body is CharacterBody2D and body.is_in_group("player"):
 		player = body
 		state = STATE.CHASE
-
+		MusicManager.play_music(
+			load("res://sounding/enemy_attacking.mp3")
+		)
 
 func _on_body_exited(body):
 	if body == player:
 		player = null
 		state = STATE.IDLE
+		
+	

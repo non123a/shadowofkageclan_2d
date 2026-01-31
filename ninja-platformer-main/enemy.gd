@@ -180,7 +180,10 @@ func start_first_attack_delay() -> void:
 
 func _on_body_entered(body):
 	print("Detected body:", body.name)
-
+	if body.is_in_group("player"):
+		MusicManager.play_music(
+			load("res://sounding/enemy_attacking.mp3")
+		)
 	if body is CharacterBody2D and body.is_in_group("player"):
 		player = body
 		state = STATE.CHASE

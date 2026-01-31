@@ -2,6 +2,10 @@ extends Node2D
 
 @export var push_strength: float = 300.0
 var bodies_inside: Array[CharacterBody2D] = []
+func _ready():
+	MusicManager.play_music(
+		load("res://sounding/startOftheGame.mp3")
+	)
 
 func _on_body_entered(body: Node2D) -> void:
 	if body is CharacterBody2D:

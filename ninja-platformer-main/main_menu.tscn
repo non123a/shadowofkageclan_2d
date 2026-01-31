@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://b5q0y5p2a60jm"]
+[gd_scene load_steps=16 format=3 uid="uid://b5q0y5p2a60jm"]
 
 [ext_resource type="Script" uid="uid://djgilwot1qxec" path="res://main_menu.gd" id="1_06t4h"]
 [ext_resource type="Texture2D" uid="uid://bqibkmavjuuna" path="res://menu_asset/start_normal.png" id="2_jix8l"]
@@ -12,12 +12,14 @@
 [ext_resource type="Texture2D" uid="uid://dbvhejjvp1s2c" path="res://menu_asset/quit_press.png" id="9_0k4wn"]
 [ext_resource type="Texture2D" uid="uid://dnqs0lk784lmr" path="res://menu_asset/quit_hover.png" id="10_j5v2v"]
 [ext_resource type="Texture2D" uid="uid://bpic3qovjkuxn" path="res://menu_asset/manu_bg.png" id="11_0k4wn"]
+[ext_resource type="Texture2D" uid="uid://xwu5011teeb8" path="res://Screenshot 2026-01-31 at 4.49.11 in the afternoon.png" id="13_cm266"]
+[ext_resource type="Texture2D" uid="uid://dvtsexytbx8rr" path="res://Screenshot 2026-01-31 at 4.50.20 in the afternoon.png" id="14_g8g3n"]
+[ext_resource type="Texture2D" uid="uid://didmk7dbub1ey" path="res://Screenshot 2026-01-31 at 4.51.05 in the afternoon.png" id="15_8u0te"]
 
 [node name="Main_menu" type="Node2D"]
 script = ExtResource("1_06t4h")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-visible = false
 position = Vector2(166, 91)
 scale = Vector2(0.2, 0.2)
 texture = ExtResource("11_0k4wn")
@@ -70,6 +72,42 @@ texture_normal = ExtResource("8_0o4t1")
 texture_pressed = ExtResource("9_0k4wn")
 texture_hover = ExtResource("10_j5v2v")
 
+[node name="OptionsPanel" type="Panel" parent="."]
+anchors_preset = 14
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Buttom_manager2" type="Control" parent="OptionsPanel"]
+anchors_preset = 0
+offset_left = 52.0
+offset_right = 92.0
+offset_bottom = 40.0
+
+[node name="MusicToggle" type="CheckBox" parent="OptionsPanel/Buttom_manager2"]
+layout_mode = 0
+offset_left = 142.0
+offset_top = 92.00001
+offset_right = 998.0
+offset_bottom = 498.0
+scale = Vector2(0.05, 0.05)
+theme_override_icons/icon = ExtResource("13_cm266")
+theme_override_icons/unchecked = ExtResource("14_g8g3n")
+
+[node name="CloseButton" type="Button" parent="OptionsPanel/Buttom_manager2"]
+layout_mode = 0
+offset_left = 144.0
+offset_top = 114.0
+offset_right = 171.0
+offset_bottom = 133.0
+scale = Vector2(0.05, 0.05)
+theme_override_font_sizes/font_size = 7
+icon = ExtResource("15_8u0te")
+
 [connection signal="pressed" from="Buttom_manager/Start" to="." method="_on_start_pressed"]
 [connection signal="pressed" from="Buttom_manager/Options" to="." method="_on_options_pressed"]
 [connection signal="pressed" from="Buttom_manager/Quit" to="." method="_on_quit_pressed"]
+[connection signal="toggled" from="OptionsPanel/Buttom_manager2/MusicToggle" to="." method="_on_music_toggle_toggled"]
+[connection signal="pressed" from="OptionsPanel/Buttom_manager2/CloseButton" to="." method="_on_close_button_pressed"]
