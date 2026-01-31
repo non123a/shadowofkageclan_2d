@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://hujel6rtl8j5"
+path="res://.godot/imported/MiniMacro Sound - The Ninja Gaiden Soundtrack as Interpreted by MiniMacro Sound - 16 Evading the Enemy.mp3-519b58f9933388e5de41469574025d0d.mp3str"
+
+[deps]
+
+source_file="res://sounding/MiniMacro Sound - The Ninja Gaiden Soundtrack as Interpreted by MiniMacro Sound - 16 Evading the Enemy.mp3"
+dest_files=["res://.godot/imported/MiniMacro Sound - The Ninja Gaiden Soundtrack as Interpreted by MiniMacro Sound - 16 Evading the Enemy.mp3-519b58f9933388e5de41469574025d0d.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

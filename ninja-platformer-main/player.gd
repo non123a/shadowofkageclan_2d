@@ -10,8 +10,28 @@ enum STATE { MOVE, CLIMB, HIT, DASH }
 var can_dash := true
 var dash_direction := 1
 
+@onready var swing_audio: AudioStreamPlayer2D = $SwingAudio
+@onready var hit_audio: AudioStreamPlayer2D = $HitAudio
+#@onready var swing_audio: AudioStreamPlayer2D = $SwingAudio
+#@onready var hit_audio: AudioStreamPlayer2D = $HitAudio
+@onready var hitbox: Hitbox = $Anchor/Hitbox
+#hitbox.hit.connect(func(hurtbox):
+	#play_hit_sound()
+#)
+func play_swing_sound():
+	if not swing_audio:
+		return
+
+	swing_audio.pitch_scale = randf_range(0.95, 1.1)
+	swing_audio.play()
+
+func play_hit_sound():
+	if hit_audio:
+		hit_audio.play()
 
 
+@export var attack_cooldown := 0.5
+var can_attack := true
 
 
 @export var stats: Stats
@@ -41,8 +61,11 @@ var coyote_time: = 0.0
 @onready var shaker_upper: = Shaker.new(sprite_upper)
 @onready var shaker_lower: = Shaker.new(sprite_lower)
 @onready var camera_2d: Camera2D = $Camera2D
+func _on_hitbox_hit(hurtbox: Hurtbox) -> void:
+	play_hit_sound()
 
 func _ready() -> void:
+	hitbox.hit.connect(_on_hitbox_hit)
 	# --- Health bar setup ---
 	if stats and health_bar:
 		health_bar.max_value = stats.max_health
@@ -99,8 +122,9 @@ func _physics_process(delta: float) -> void:
 			if Input.is_action_just_pressed("jump") and (is_on_floor() or coyote_time > 0):
 				jump()
 			
-			if Input.is_action_just_pressed("attack"):
-				animation_player_upper.play("attack")
+			if Input.is_action_just_pressed("attack") and can_attack:
+				#animation_player_upper.play("attack")
+				start_attack()
 			
 			if x_input == 0:
 				apply_friction(delta)
@@ -346,3 +370,20 @@ func spawn_afterimage() -> void:
 	var tween := create_tween()
 	tween.tween_property(ghost, "modulate:a", 0.0, 0.15)
 	tween.tween_callback(ghost.queue_free)
+
+
+func start_attack() -> void:
+	can_attack = false
+
+	# Play swing sound (always)
+	play_swing_sound()
+
+	# Play animation
+	animation_player_upper.play("attack")
+
+	# Wait for animation to finish
+	await animation_player_upper.animation_finished
+
+	# Cooldown
+	await get_tree().create_timer(attack_cooldown).timeout
+	can_attack = true

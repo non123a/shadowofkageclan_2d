@@ -1,4 +1,4 @@
-[gd_scene load_steps=33 format=3 uid="uid://bl7cbq2ma5mjj"]
+[gd_scene load_steps=35 format=3 uid="uid://bl7cbq2ma5mjj"]
 
 [ext_resource type="Script" uid="uid://b4xqkm8dmmdgk" path="res://player.gd" id="1_i3pqv"]
 [ext_resource type="Script" uid="uid://2i8vukneqwu1" path="res://stats.gd" id="2_1jxqw"]
@@ -9,6 +9,8 @@
 [ext_resource type="Script" uid="uid://qjrnpv4tbvkp" path="res://hurtbox.gd" id="5_sweqy"]
 [ext_resource type="Script" uid="uid://cm74v21o2dnr6" path="res://camera_2d.gd" id="8_dw050"]
 [ext_resource type="Texture2D" uid="uid://051rixswe63c" path="res://menu_asset/health_bar_frame.png" id="9_b26j0"]
+[ext_resource type="AudioStream" uid="uid://cfupxgbc70odk" path="res://sounding/sword-slash-476148.wav" id="10_nvl01"]
+[ext_resource type="AudioStream" uid="uid://ihwe0pj5b3at" path="res://sounding/sword-blade-slicing-flesh-352708.mp3" id="11_nvl01"]
 
 [sub_resource type="Resource" id="Resource_dw050"]
 script = ExtResource("2_1jxqw")
@@ -514,3 +516,9 @@ theme_override_styles/background = SubResource("StyleBoxFlat_dw050")
 theme_override_styles/fill = SubResource("StyleBoxFlat_b26j0")
 max_value = 0.0
 show_percentage = false
+
+[node name="SwingAudio" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("10_nvl01")
+
+[node name="HitAudio" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("11_nvl01")

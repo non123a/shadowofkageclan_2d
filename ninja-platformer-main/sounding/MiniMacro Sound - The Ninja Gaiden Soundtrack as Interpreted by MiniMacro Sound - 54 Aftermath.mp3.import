@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://bx50q3i518yem"
+path="res://.godot/imported/MiniMacro Sound - The Ninja Gaiden Soundtrack as Interpreted by MiniMacro Sound - 54 Aftermath.mp3-87a4376ed161b718565c422de2dd668e.mp3str"
+
+[deps]
+
+source_file="res://sounding/MiniMacro Sound - The Ninja Gaiden Soundtrack as Interpreted by MiniMacro Sound - 54 Aftermath.mp3"
+dest_files=["res://.godot/imported/MiniMacro Sound - The Ninja Gaiden Soundtrack as Interpreted by MiniMacro Sound - 54 Aftermath.mp3-87a4376ed161b718565c422de2dd668e.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4
