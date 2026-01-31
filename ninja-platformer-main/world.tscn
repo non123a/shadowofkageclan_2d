@@ -1,4 +1,4 @@
-[gd_scene load_steps=24 format=4 uid="uid://b6jqdqmnr2cqf"]
+[gd_scene load_steps=25 format=4 uid="uid://b6jqdqmnr2cqf"]
 
 [ext_resource type="Script" uid="uid://dephygc4nk1vv" path="res://world.gd" id="1_aqk2v"]
 [ext_resource type="PackedScene" uid="uid://bl7cbq2ma5mjj" path="res://player.tscn" id="1_fj7yv"]
@@ -16,6 +16,7 @@
 [ext_resource type="Texture2D" uid="uid://jq86h2r5efqe" path="res://Tiles and BG/DeadForest_BG_4.png" id="12_cbp6q"]
 [ext_resource type="PackedScene" uid="uid://rsd74dj400hc" path="res://enemy.tscn" id="14_70uel"]
 [ext_resource type="PackedScene" uid="uid://bxgl1x4tatpqj" path="res://enemy_cannon.tscn" id="15_hiqwa"]
+[ext_resource type="PackedScene" uid="uid://c7b2w71g36je0" path="res://final_boss.tscn" id="17_udxuc"]
 
 [sub_resource type="Resource" id="Resource_2u3nc"]
 script = ExtResource("5_2u3nc")
@@ -765,3 +766,9 @@ position = Vector2(2591, -187)
 
 [node name="enemy6" parent="." instance=ExtResource("14_70uel")]
 position = Vector2(1280, 231)
+
+[node name="Final Boss" parent="." instance=ExtResource("17_udxuc")]
+position = Vector2(145, 233)
+max_health = 10
+intro_delay = 5.0
+dodge_cooldown = 2.0
