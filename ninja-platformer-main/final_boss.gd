@@ -58,46 +58,15 @@ func _ready():
 		health_bar.value = stats.health
 		health_bar.visible = true
 
-	#hurtbox.hurt.connect(func(other_hitbox: Hitbox):
-		#if stats == null:
-			#push_error("Enemy stats is NULL!")
-			#return
-		## Knockback (same style as player)
-		#if not can_dodge:
-			## Normal damage only
-			#stats.health -= other_hitbox.damage
-			#return
-#
-		## Dodge instead of taking damage
-			#dodge_back()
-		#var x_direction = sign(other_hitbox.global_position.direction_to(global_position).x)
-		#if x_direction == 0:
-			#x_direction = -1
-#
-		#velocity.x = x_direction * knockback_force
-		#velocity.y = -knockback_up
-		#state = STATE.HIT
-#
-#
-		#@warning_ignore("narrowing_conversion")
-		#stats.health -= other_hitbox.damage
-		#stats.health = max(stats.health, 0)
-#
-		## Update health bar
-		#if health_bar:
-			#health_bar.value = stats.health
-#
-		#print("Enemy hit! Health:", stats.health)
-#
-		#if stats.health <= 0:
-			#queue_free()
-	#)
 	hurtbox.hurt.connect(func(other_hitbox: Hitbox):
 		if stats == null:
 			return
 
 		# === DODGE IF AVAILABLE ===
-		if can_dodge:
+		#if can_dodge:
+			#dodge_back()
+			#return
+		if can_dodge and state != STATE.DODGE and state != STATE.DASH_ATTACK:
 			dodge_back()
 			return
 
@@ -121,7 +90,7 @@ func _ready():
 		if stats.health <= 0:
 			queue_free()
 	)
-
+	
 
 	detection_area.body_entered.connect(_on_body_entered)
 	detection_area.body_exited.connect(_on_body_exited)
@@ -231,21 +200,44 @@ func start_intro() -> void:
 	await get_tree().create_timer(intro_delay).timeout
 	intro_done = true
 	state = STATE.DASH_ATTACK
-func dash_to_player():
+#func dash_to_player():
+	#if not player:
+		#return
+#
+	#state = STATE.DASH_ATTACK
+#
+	#var dir : int =sign(player.global_position.x - global_position.x)
+	#anchor.scale.x = dir
+#
+	#velocity.x = dir * dash_speed
+	#await get_tree().create_timer(0.15).timeout
+#
+	#velocity.x = 0
+	#state = STATE.ATTACK
+	#attack()
+
+func dash_to_player() -> void:
 	if not player:
 		return
 
 	state = STATE.DASH_ATTACK
 
-	var dir : int =sign(player.global_position.x - global_position.x)
+	var dir: int = sign(player.global_position.x - global_position.x)
+	if dir == 0:
+		dir = 1
 	anchor.scale.x = dir
 
-	velocity.x = dir * dash_speed
-	await get_tree().create_timer(0.15).timeout
+	var dash_frames := 8
+	var step := dash_distance / dash_frames
 
-	velocity.x = 0
+	for i in range(dash_frames):
+		spawn_afterimage()
+		global_position.x += dir * step
+		await get_tree().create_timer(0.02).timeout
+
 	state = STATE.ATTACK
 	attack()
+
 
 func _on_body_entered(body):
 	print("Detected body:", body.name)
@@ -264,6 +256,24 @@ func _on_body_exited(body):
 		state = STATE.IDLE
 		
 	
+#func dodge_back() -> void:
+	#if not player or not can_dodge:
+		#return
+#
+	#can_dodge = false
+	#state = STATE.DODGE
+#
+	#var dir4: int = sign(global_position.x - player.global_position.x)
+	#if dir4 == 0:
+		#dir4 = 1
+#
+	#velocity.x = dir4 * dash_speed
+	#await get_tree().create_timer(0.15).timeout
+	#velocity.x = 0
+#
+	#state = STATE.CHASE
+	#start_dodge_cooldown()
+
 func dodge_back() -> void:
 	if not player or not can_dodge:
 		return
@@ -271,20 +281,38 @@ func dodge_back() -> void:
 	can_dodge = false
 	state = STATE.DODGE
 
-	var dir4: int = sign(global_position.x - player.global_position.x)
-	if dir4 == 0:
-		dir4 = 1
+	var dir: int = sign(global_position.x - player.global_position.x)
+	if dir == 0:
+		dir = 1
+	anchor.scale.x = dir
 
-	velocity.x = dir4 * dash_speed
-	await get_tree().create_timer(0.15).timeout
-	velocity.x = 0
+	var dash_frames := 6
+	var step := dash_distance / dash_frames
+
+	for i in range(dash_frames):
+		spawn_afterimage()
+		global_position.x += dir * step
+		await get_tree().create_timer(0.02).timeout
 
 	state = STATE.CHASE
 	start_dodge_cooldown()
 
-#func start_dodge_cooldown():
-	#await get_tree().create_timer(dodge_cooldown).timeout
-	#can_dodge = true
+
 func start_dodge_cooldown() -> void:
 	await get_tree().create_timer(dodge_cooldown).timeout
 	can_dodge = true
+
+
+func spawn_afterimage() -> void:
+	var ghost: Node2D = anchor.duplicate()
+	ghost.visible = true
+	ghost.modulate = Color(1, 1, 1, 0.5)
+	ghost.scale = anchor.scale
+	ghost.z_index = anchor.z_index - 1
+
+	get_tree().current_scene.add_child(ghost)
+	ghost.global_position = anchor.global_position
+
+	var tween := create_tween()
+	tween.tween_property(ghost, "modulate:a", 0.0, 0.2)
+	tween.tween_callback(ghost.queue_free)
