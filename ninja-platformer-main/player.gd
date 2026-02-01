@@ -6,12 +6,9 @@ enum STATE { MOVE, CLIMB, HIT, DASH }
 @export var dash_duration := 0.1
 @export var dash_cooldown := 1
 
-#@export var regen_delay := 10.0
-#@export var regen_rate := 2.0 # seconds per 1 HP
-#@export var regen_amount := 1.0 
 
 @export var regen_delay := 10.0     # wait 10 seconds after last hit
-@export var regen_rate := 1.0       # tick every 1 second
+@export var regen_rate := 2.0       # tick every 1 second
 @export var regen_amount := 0.5     # heal 0.5 HP per tick
 
 
@@ -76,19 +73,6 @@ func start_regen():
 	regen_active = true
 	regen_tick_timer.start()
 
-#func _on_regen_tick():
-	#if not regen_active:
-		#return
-#
-	#if stats.health >= stats.max_health:
-		#stats.health = stats.max_health
-		#stop_regen()
-		#return
-#
-	##stats.health += regen_amount
-	#var regen_buffer := 0.0
-
-
 
 @export var attack_cooldown := 0.5
 var can_attack := true
@@ -125,8 +109,17 @@ var coyote_time: = 0.0
 func _on_hitbox_hit(hurtbox: Hurtbox) -> void:
 	play_hit_sound()
 
+func move_to_spawn_point():
+	if GameManager.next_spawn_id == "":
+		return
+
+	for spawn in get_tree().get_nodes_in_group("spawn_point"):
+		if spawn.spawn_id == GameManager.next_spawn_id:
+			global_position = spawn.global_position
+			break
 
 func _ready() -> void:
+	move_to_spawn_point()
 	regen_delay_timer = Timer.new()
 	regen_delay_timer.one_shot = true
 	regen_delay_timer.wait_time = regen_delay

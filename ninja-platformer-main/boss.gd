@@ -1,16 +1,23 @@
+
 extends CharacterBody2D
 
 enum STATE { IDLE, CHASE, ATTACK, HIT }
 @onready var hurtbox: Hurtbox = $Anchor/Hurtbox
-@export var stats: Stats
-@export var attack_cooldown := 0.5 # seconds
+
+
+@export var max_health := 3
+var health := max_health
+
+
+@export var attack_cooldown := 1.0 # seconds
 var can_attack := true
 
-@export var knockback_force := 120.0
-@export var knockback_up := 80.0
+@export var knockback_force := 100.0
+@export var knockback_up := 60.0
 
+var can_take_damage: bool = true
 
-@export var max_speed := 120
+@export var max_speed := 100
 @export var gravity := 900
 @export var attack_range := 50
 @export var attack_duration := 0.15
@@ -24,44 +31,55 @@ var player: CharacterBody2D = null
 @onready var detection_area: Area2D = $DetectionArea
 @onready var hitbox: Area2D = $Anchor/Hitbox
 @onready var anchor: Node2D = $Anchor
+func die():
+	queue_free()
 
 func _ready():
 	anchor.scale.x = -1
 	hitbox.monitoring = false
+	health = max_health
 
-	# --- HealthBar setup ---
-	if stats != null and health_bar:
-		health_bar.max_value = stats.max_health
-		health_bar.value = stats.health
+	if health_bar:
+		health_bar.max_value = max_health
+		health_bar.value = health
 		health_bar.visible = true
 
 	hurtbox.hurt.connect(func(other_hitbox: Hitbox):
-		if stats == null:
-			push_error("Enemy stats is NULL!")
+		if not can_take_damage:
 			return
-		# Knockback (same style as player)
-		var x_direction = sign(other_hitbox.global_position.direction_to(global_position).x)
-		if x_direction == 0:
-			x_direction = -1
 
-		velocity.x = x_direction * knockback_force
+		can_take_damage = false
+
+		# Knockback
+		var x_dir: int = sign(
+			other_hitbox.global_position.direction_to(global_position).x
+		)
+
+		if x_dir == 0:
+			x_dir = -1
+
+		velocity.x = x_dir * knockback_force
 		velocity.y = -knockback_up
 		state = STATE.HIT
 
+		# Damage
+		health -= other_hitbox.damage
+		health = max(health, 0)
 
-		@warning_ignore("narrowing_conversion")
-		stats.health -= other_hitbox.damage
-		stats.health = max(stats.health, 0)
-
-		# Update health bar
 		if health_bar:
-			health_bar.value = stats.health
+			health_bar.value = health
 
-		print("Enemy hit! Health:", stats.health)
+		print("Boss hit! Health:", health)
 
-		if stats.health <= 0:
-			queue_free()
+		if health <= 0:
+			die()
+			return
+
+		# Damage cooldown (prevents multi-hit spam)
+		await get_tree().create_timer(0.2).timeout
+		can_take_damage = true
 	)
+
 
 	detection_area.body_entered.connect(_on_body_entered)
 	detection_area.body_exited.connect(_on_body_exited)
@@ -180,5 +198,3 @@ func _on_body_exited(body):
 	if body == player:
 		player = null
 		state = STATE.IDLE
-		
-	

@@ -1,33 +1,21 @@
+
 extends CharacterBody2D
 
-enum STATE {
-	IDLE,
-	CHASE,
-	ATTACK,
-	HIT,
-	DASH_ATTACK,
-	DODGE,
-	INTRO
-}
-@export var max_health := 10
-
-@export var dash_speed := 400.0
-@export var dash_distance := 120.0
-
-@export var intro_delay := 2.0
-@export var dodge_cooldown := 3.0
-
-var can_dodge := true
-var intro_done := false
-
+enum STATE { IDLE, CHASE, ATTACK, HIT }
 @onready var hurtbox: Hurtbox = $Anchor/Hurtbox
-@export var stats: Stats
+
+
+@export var max_health := 4
+var health := max_health
+
+
 @export var attack_cooldown := 0.5 # seconds
 var can_attack := true
 
 @export var knockback_force := 120.0
 @export var knockback_up := 80.0
 
+var can_take_damage: bool = true
 
 @export var max_speed := 120
 @export var gravity := 900
@@ -43,54 +31,56 @@ var player: CharacterBody2D = null
 @onready var detection_area: Area2D = $DetectionArea
 @onready var hitbox: Area2D = $Anchor/Hitbox
 @onready var anchor: Node2D = $Anchor
+func die():
+	queue_free()
 
 func _ready():
-	if stats:
-		stats.max_health = max_health
-		stats.health = max_health
-
 	anchor.scale.x = -1
 	hitbox.monitoring = false
+	health = max_health
 
-	# --- HealthBar setup ---
-	if stats != null and health_bar:
-		health_bar.max_value = stats.max_health
-		health_bar.value = stats.health
+	if health_bar:
+		health_bar.max_value = max_health
+		health_bar.value = health
 		health_bar.visible = true
 
+
 	hurtbox.hurt.connect(func(other_hitbox: Hitbox):
-		if stats == null:
+		if not can_take_damage:
 			return
 
-		# === DODGE IF AVAILABLE ===
-		#if can_dodge:
-			#dodge_back()
-			#return
-		if can_dodge and state != STATE.DODGE and state != STATE.DASH_ATTACK:
-			dodge_back()
-			return
+		can_take_damage = false
 
-		# === TAKE DAMAGE ===
-		var x_direction: int = sign(
+		# Knockback
+		var x_dir: int = sign(
 			other_hitbox.global_position.direction_to(global_position).x
 		)
-		if x_direction == 0:
-			x_direction = -1
 
-		velocity.x = x_direction * knockback_force
+		if x_dir == 0:
+			x_dir = -1
+
+		velocity.x = x_dir * knockback_force
 		velocity.y = -knockback_up
 		state = STATE.HIT
 
-		stats.health -= other_hitbox.damage
-		stats.health = max(stats.health, 0)
+		# Damage
+		health -= other_hitbox.damage
+		health = max(health, 0)
 
 		if health_bar:
-			health_bar.value = stats.health
+			health_bar.value = health
 
-		if stats.health <= 0:
-			queue_free()
+		print("Boss hit! Health:", health)
+
+		if health <= 0:
+			die()
+			return
+
+		# Damage cooldown (prevents multi-hit spam)
+		await get_tree().create_timer(0.2).timeout
+		can_take_damage = true
 	)
-	
+
 
 	detection_area.body_entered.connect(_on_body_entered)
 	detection_area.body_exited.connect(_on_body_exited)
@@ -101,8 +91,6 @@ func _physics_process(delta):
 		velocity.y += gravity * delta
 
 	match state:
-		STATE.DASH_ATTACK:
-			dash_to_player()
 		STATE.IDLE:
 			velocity.x = 0
 
@@ -196,58 +184,15 @@ func attack():
 
 	can_attack = true
 	state = STATE.CHASE
-func start_intro() -> void:
-	await get_tree().create_timer(intro_delay).timeout
-	intro_done = true
-	state = STATE.DASH_ATTACK
-#func dash_to_player():
-	#if not player:
-		#return
-#
-	#state = STATE.DASH_ATTACK
-#
-	#var dir : int =sign(player.global_position.x - global_position.x)
-	#anchor.scale.x = dir
-#
-	#velocity.x = dir * dash_speed
-	#await get_tree().create_timer(0.15).timeout
-#
-	#velocity.x = 0
-	#state = STATE.ATTACK
-	#attack()
-
-func dash_to_player() -> void:
-	if not player:
-		return
-
-	state = STATE.DASH_ATTACK
-
-	var dir: int = sign(player.global_position.x - global_position.x)
-	if dir == 0:
-		dir = 1
-	anchor.scale.x = dir
-
-	var dash_frames := 8
-	var step := dash_distance / dash_frames
-
-	for i in range(dash_frames):
-		spawn_afterimage()
-		global_position.x += dir * step
-		await get_tree().create_timer(0.02).timeout
-
-	state = STATE.ATTACK
-	attack()
-
 
 func _on_body_entered(body):
 	print("Detected body:", body.name)
 
 	if body is CharacterBody2D and body.is_in_group("player"):
 		player = body
-		state = STATE.INTRO
-		start_intro()
+		state = STATE.CHASE
 		MusicManager.play_music(
-			load("res://sounding/boss_attacking.mp3")
+			load("res://sounding/world2_sounding.mp3")
 		)
 
 func _on_body_exited(body):
@@ -256,63 +201,3 @@ func _on_body_exited(body):
 		state = STATE.IDLE
 		
 	
-#func dodge_back() -> void:
-	#if not player or not can_dodge:
-		#return
-#
-	#can_dodge = false
-	#state = STATE.DODGE
-#
-	#var dir4: int = sign(global_position.x - player.global_position.x)
-	#if dir4 == 0:
-		#dir4 = 1
-#
-	#velocity.x = dir4 * dash_speed
-	#await get_tree().create_timer(0.15).timeout
-	#velocity.x = 0
-#
-	#state = STATE.CHASE
-	#start_dodge_cooldown()
-
-func dodge_back() -> void:
-	if not player or not can_dodge:
-		return
-
-	can_dodge = false
-	state = STATE.DODGE
-
-	var dir: int = sign(global_position.x - player.global_position.x)
-	if dir == 0:
-		dir = 1
-	anchor.scale.x = dir
-
-	var dash_frames := 6
-	var step := dash_distance / dash_frames
-
-	for i in range(dash_frames):
-		spawn_afterimage()
-		global_position.x += dir * step
-		await get_tree().create_timer(0.02).timeout
-
-	state = STATE.CHASE
-	start_dodge_cooldown()
-
-
-func start_dodge_cooldown() -> void:
-	await get_tree().create_timer(dodge_cooldown).timeout
-	can_dodge = true
-
-
-func spawn_afterimage() -> void:
-	var ghost: Node2D = anchor.duplicate()
-	ghost.visible = true
-	ghost.modulate = Color(1, 1, 1, 0.5)
-	ghost.scale = anchor.scale
-	ghost.z_index = anchor.z_index - 1
-
-	get_tree().current_scene.add_child(ghost)
-	ghost.global_position = anchor.global_position
-
-	var tween := create_tween()
-	tween.tween_property(ghost, "modulate:a", 0.0, 0.2)
-	tween.tween_callback(ghost.queue_free)

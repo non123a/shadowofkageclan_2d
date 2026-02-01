@@ -1,11 +1,11 @@
-[gd_scene load_steps=31 format=3 uid="uid://2jhppfejch36"]
+[gd_scene load_steps=31 format=3 uid="uid://dbiuslntvlson"]
 
-[ext_resource type="Script" uid="uid://capb4qwvm0x6g" path="res://boss.gd" id="1_we8h1"]
-[ext_resource type="Material" uid="uid://dx10wnlxgh3sb" path="res://effects_material.tres" id="2_kvofc"]
-[ext_resource type="Texture2D" uid="uid://c28vr0t67nrwc" path="res://ninja_upper_red_black.png" id="4_kles1"]
-[ext_resource type="Script" uid="uid://cqxr3go31xf5c" path="res://hitbox.gd" id="5_kles1"]
-[ext_resource type="Texture2D" uid="uid://djse2f5m8h2de" path="res://ninja_lower_red_black.png" id="5_kvofc"]
-[ext_resource type="Script" uid="uid://qjrnpv4tbvkp" path="res://hurtbox.gd" id="6_etj48"]
+[ext_resource type="Script" uid="uid://ynjfl27j6c15" path="res://boss_2.gd" id="1_sk0yy"]
+[ext_resource type="Material" uid="uid://dx10wnlxgh3sb" path="res://effects_material.tres" id="3_n0fvj"]
+[ext_resource type="Texture2D" uid="uid://c28vr0t67nrwc" path="res://ninja_upper_red_black.png" id="4_h8w3r"]
+[ext_resource type="Texture2D" uid="uid://djse2f5m8h2de" path="res://ninja_lower_red_black.png" id="5_dtkgq"]
+[ext_resource type="Script" uid="uid://cqxr3go31xf5c" path="res://hitbox.gd" id="6_1s1fl"]
+[ext_resource type="Script" uid="uid://qjrnpv4tbvkp" path="res://hurtbox.gd" id="7_hjexc"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_wujgv"]
 bg_color = Color(0.02745098, 0.11372549, 0.13333334, 0)
@@ -378,12 +378,11 @@ _data = {
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_kvofc"]
 size = Vector2(153.875, 32)
 
-[node name="Boss" type="CharacterBody2D"]
+[node name="Boss_2" type="CharacterBody2D"]
 z_index = 50
 position = Vector2(1, 3)
 collision_layer = 2
-script = ExtResource("1_we8h1")
-max_speed = 150
+script = ExtResource("1_sk0yy")
 
 [node name="Anchor" type="Node2D" parent="."]
 
@@ -399,16 +398,16 @@ show_percentage = false
 
 [node name="SpriteUpper" type="Sprite2D" parent="Anchor"]
 z_index = 1
-material = ExtResource("2_kvofc")
+material = ExtResource("3_n0fvj")
 position = Vector2(-2, -13)
-texture = ExtResource("4_kles1")
+texture = ExtResource("4_h8w3r")
 offset = Vector2(16, 0)
 hframes = 15
 
 [node name="SpriteLower" type="Sprite2D" parent="Anchor"]
-material = ExtResource("2_kvofc")
+material = ExtResource("3_n0fvj")
 position = Vector2(-2, -13)
-texture = ExtResource("5_kvofc")
+texture = ExtResource("5_dtkgq")
 offset = Vector2(16, 0)
 hframes = 15
 frame = 6
@@ -424,7 +423,7 @@ target_position = Vector2(2, 0)
 [node name="Hitbox" type="Area2D" parent="Anchor"]
 collision_layer = 0
 collision_mask = 8
-script = ExtResource("5_kles1")
+script = ExtResource("6_1s1fl")
 metadata/_custom_type_script = "uid://cqxr3go31xf5c"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Anchor/Hitbox"]
@@ -435,7 +434,7 @@ metadata/_edit_group_ = true
 [node name="Hurtbox" type="Area2D" parent="Anchor"]
 collision_layer = 16
 collision_mask = 0
-script = ExtResource("6_etj48")
+script = ExtResource("7_hjexc")
 metadata/_custom_type_script = "uid://qjrnpv4tbvkp"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Anchor/Hurtbox"]
