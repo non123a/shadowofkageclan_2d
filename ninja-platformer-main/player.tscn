@@ -12,7 +12,7 @@
 [ext_resource type="AudioStream" uid="uid://cfupxgbc70odk" path="res://sounding/sword-slash-476148.wav" id="10_nvl01"]
 [ext_resource type="AudioStream" uid="uid://ihwe0pj5b3at" path="res://sounding/sword-blade-slicing-flesh-352708.mp3" id="11_nvl01"]
 
-[sub_resource type="Resource" id="Resource_dw050"]
+[sub_resource type="Resource" id="Resource_nvl01"]
 script = ExtResource("2_1jxqw")
 metadata/_custom_type_script = "uid://2i8vukneqwu1"
 
@@ -414,7 +414,7 @@ script = ExtResource("1_i3pqv")
 dash_speed = 200
 dash_duration = 0.05
 dash_cooldown = 2
-stats = SubResource("Resource_dw050")
+stats = SubResource("Resource_nvl01")
 state = 0
 jump_amount = 250
 

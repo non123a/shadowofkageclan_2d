@@ -1,23 +1,53 @@
 extends CharacterBody2D
 
-#enum STATE { MOVE, CLIMB, HIT }
 enum STATE { MOVE, CLIMB, HIT, DASH }
 #add dash
 @export var dash_speed := 300
 @export var dash_duration := 0.1
 @export var dash_cooldown := 1
 
+#@export var regen_delay := 10.0
+#@export var regen_rate := 2.0 # seconds per 1 HP
+#@export var regen_amount := 1.0 
+
+@export var regen_delay := 10.0     # wait 10 seconds after last hit
+@export var regen_rate := 1.0       # tick every 1 second
+@export var regen_amount := 0.5     # heal 0.5 HP per tick
+
+
+
+var regen_active := false
+var regen_delay_timer: Timer
+var regen_tick_timer: Timer
+
+var regen_buffer: float = 0.0
+
 var can_dash := true
 var dash_direction := 1
 
 @onready var swing_audio: AudioStreamPlayer2D = $SwingAudio
 @onready var hit_audio: AudioStreamPlayer2D = $HitAudio
-#@onready var swing_audio: AudioStreamPlayer2D = $SwingAudio
-#@onready var hit_audio: AudioStreamPlayer2D = $HitAudio
+
 @onready var hitbox: Hitbox = $Anchor/Hitbox
-#hitbox.hit.connect(func(hurtbox):
-	#play_hit_sound()
-#)
+
+
+func _on_regen_tick():
+	if not regen_active:
+		return
+
+	if stats.health >= stats.max_health:
+		stats.health = stats.max_health
+		stop_regen()
+		return
+
+	regen_buffer += regen_amount
+	if regen_buffer >= 1.0:
+		var heal := int(regen_buffer)
+		regen_buffer -= heal
+		stats.health += heal
+
+
+
 func play_swing_sound():
 	if not swing_audio:
 		return
@@ -28,6 +58,36 @@ func play_swing_sound():
 func play_hit_sound():
 	if hit_audio:
 		hit_audio.play()
+func start_regen_delay():
+	stop_regen()
+	regen_delay_timer.start()
+
+func stop_regen():
+	regen_active = false
+	if regen_tick_timer:
+		regen_tick_timer.stop()
+
+func _on_regen_delay_finished():
+	start_regen()
+
+func start_regen():
+	if regen_active:
+		return
+	regen_active = true
+	regen_tick_timer.start()
+
+#func _on_regen_tick():
+	#if not regen_active:
+		#return
+#
+	#if stats.health >= stats.max_health:
+		#stats.health = stats.max_health
+		#stop_regen()
+		#return
+#
+	##stats.health += regen_amount
+	#var regen_buffer := 0.0
+
 
 
 @export var attack_cooldown := 0.5
@@ -61,10 +121,24 @@ var coyote_time: = 0.0
 @onready var shaker_upper: = Shaker.new(sprite_upper)
 @onready var shaker_lower: = Shaker.new(sprite_lower)
 @onready var camera_2d: Camera2D = $Camera2D
+
 func _on_hitbox_hit(hurtbox: Hurtbox) -> void:
 	play_hit_sound()
 
+
 func _ready() -> void:
+	regen_delay_timer = Timer.new()
+	regen_delay_timer.one_shot = true
+	regen_delay_timer.wait_time = regen_delay
+	add_child(regen_delay_timer)
+	regen_delay_timer.timeout.connect(_on_regen_delay_finished)
+
+	regen_tick_timer = Timer.new()
+	regen_tick_timer.one_shot = false
+	regen_tick_timer.wait_time = regen_rate
+	add_child(regen_tick_timer)
+	regen_tick_timer.timeout.connect(_on_regen_tick)
+
 	hitbox.hit.connect(_on_hitbox_hit)
 	# --- Health bar setup ---
 	if stats and health_bar:
@@ -80,7 +154,8 @@ func _ready() -> void:
 		camera_2d.reparent(get_tree().current_scene)
 		queue_free()
 	)
-	
+	start_regen_delay()
+
 	sprite_lower.material.set_shader_parameter("flash_color", Color("ff4d4d"))
 	
 	animation_player_lower.current_animation_changed.connect(func(animation_name: String):
@@ -104,7 +179,15 @@ func _ready() -> void:
 		shaker_lower.shake(3, 0.3)
 		animation_player_lower.play("jump")
 		effects_animation_player.play("hitflash")
+		#stats.health -= other_hitbox.damage
+		# STOP regen immediately when hit
+		stop_regen()
+
 		stats.health -= other_hitbox.damage
+
+		# Restart regen delay after taking damage
+		start_regen_delay()
+
 		if health_bar:
 			health_bar.value = stats.health
 	)
