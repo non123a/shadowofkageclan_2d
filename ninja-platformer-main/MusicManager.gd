@@ -1,49 +1,50 @@
 extends AudioStreamPlayer
 
 var music_enabled := true
+var current_music: AudioStream = null
+
 var current_stream: AudioStream = null
 
 func _ready():
+	process_mode = Node.PROCESS_MODE_ALWAYS
 	bus = "Music"
 	autoplay = false
 
-#func play_music(stream: AudioStream, fade := true):
-	#if not music_enabled:
-		#return
-#
-	#if self.stream == stream and playing:
-		#return
-#
-	#if fade and playing:
-		#await fade_out()
-#
-	#self.stream = stream
-	#play()
-	#if fade:
-		#await fade_in()
-func play_music(stream: AudioStream, fade := true):
-	current_stream = stream   # ⭐ STORE IT
-
+func play_music(new_music: AudioStream, fade := true):
 	if not music_enabled:
 		return
 
-	if self.stream == stream and playing:
+	# Same music already playing → do nothing
+	if current_music == new_music and playing:
 		return
 
+	# Fade out current music
 	if fade and playing:
 		await fade_out()
 
-	self.stream = stream
+	# Switch track
+	current_music = new_music
+	stream = new_music
 	play()
 
+	# Fade in
 	if fade:
 		await fade_in()
 
+
+# =========================
+# STOP MUSIC
+# =========================
 func stop_music(fade := true):
 	if fade and playing:
 		await fade_out()
 	stop()
+	current_music = null
 
+
+# =========================
+# FADE HELPERS
+# =========================
 func fade_in(duration := 0.5):
 	volume_db = -40
 	play()
@@ -51,20 +52,20 @@ func fade_in(duration := 0.5):
 	tween.tween_property(self, "volume_db", 0, duration)
 	await tween.finished
 
+
 func fade_out(duration := 0.5):
 	var tween := create_tween()
 	tween.tween_property(self, "volume_db", -40, duration)
 	await tween.finished
 
-#func set_music_enabled(enabled: bool):
-	#music_enabled = enabled
-	#if not enabled:
-		#stop()
+
+# =========================
+# TOGGLE MUSIC
+# =========================
 func set_music_enabled(enabled: bool):
 	music_enabled = enabled
 
 	if not enabled:
 		stop()
-	else:
-		if current_stream:
-			play_music(current_stream)
+	elif current_music:
+		play_music(current_music, false)

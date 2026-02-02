@@ -1,4 +1,4 @@
-[gd_scene load_steps=36 format=3 uid="uid://bl7cbq2ma5mjj"]
+[gd_scene load_steps=42 format=3 uid="uid://bl7cbq2ma5mjj"]
 
 [ext_resource type="Script" uid="uid://b4xqkm8dmmdgk" path="res://player.gd" id="1_i3pqv"]
 [ext_resource type="Script" uid="uid://2i8vukneqwu1" path="res://stats.gd" id="2_1jxqw"]
@@ -11,10 +11,17 @@
 [ext_resource type="Texture2D" uid="uid://051rixswe63c" path="res://menu_asset/health_bar_frame.png" id="9_b26j0"]
 [ext_resource type="Script" uid="uid://g0to7yypkt1o" path="res://death_panel.gd" id="10_ivps1"]
 [ext_resource type="AudioStream" uid="uid://cfupxgbc70odk" path="res://sounding/sword-slash-476148.wav" id="10_nvl01"]
+[ext_resource type="Texture2D" uid="uid://cqpaqwwtr4uq" path="res://Background/ChatGPT Image Feb 2, 2026, 05_53_40 PM.png" id="10_q13i1"]
 [ext_resource type="AudioStream" uid="uid://ihwe0pj5b3at" path="res://sounding/sword-blade-slicing-flesh-352708.mp3" id="11_nvl01"]
+[ext_resource type="Texture2D" uid="uid://s8fgqt08ejoe" path="res://Background/respawn_normal.png" id="12_pylmc"]
+[ext_resource type="Texture2D" uid="uid://rxikkyxfom8g" path="res://Background/respawn_hover.png" id="13_pbfsw"]
+[ext_resource type="Texture2D" uid="uid://c0jx70vji5h11" path="res://Background/quit_normal.png" id="14_5tmop"]
+[ext_resource type="Texture2D" uid="uid://nlxshp010dyq" path="res://Background/quit_hover.png" id="15_7ahtn"]
+[ext_resource type="Texture2D" uid="uid://d20v02yijfkl7" path="res://Background/youDied.png" id="16_7lmhl"]
 
 [sub_resource type="Resource" id="Resource_nvl01"]
 script = ExtResource("2_1jxqw")
+health = 2
 metadata/_custom_type_script = "uid://2i8vukneqwu1"
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_2hs0m"]
@@ -488,6 +495,91 @@ zoom = Vector2(0.6, 0.6)
 script = ExtResource("8_dw050")
 follow_speed_x = 4.0
 
+[node name="DeathPanel" type="TextureRect" parent="Camera2D"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -235.00002
+offset_top = -181.0
+offset_right = 1301.0
+offset_bottom = 843.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.3, 0.3)
+texture = ExtResource("10_q13i1")
+script = ExtResource("10_ivps1")
+
+[node name="Panel" type="Control" parent="Camera2D/DeathPanel"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -430.0
+offset_top = -285.00006
+offset_right = -143.33337
+offset_bottom = -61.666748
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(3, 3)
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="RespawnButton" type="TextureButton" parent="Camera2D/DeathPanel/Panel"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -70.66664
+offset_top = -51.333298
+offset_right = 637.3334
+offset_bottom = 215.33347
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.2, 0.2)
+texture_normal = ExtResource("12_pylmc")
+texture_pressed = ExtResource("13_pbfsw")
+texture_hover = ExtResource("13_pbfsw")
+
+[node name="QuitButton" type="TextureButton" parent="Camera2D/DeathPanel/Panel"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 0.65500003
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -69.333305
+offset_top = -44.61663
+offset_right = 624.6667
+offset_bottom = 88.333405
+grow_horizontal = 2
+grow_vertical = 0
+scale = Vector2(0.2, 0.2)
+texture_normal = ExtResource("14_5tmop")
+texture_pressed = ExtResource("15_7ahtn")
+texture_hover = ExtResource("15_7ahtn")
+
+[node name="Label" type="TextureRect" parent="Camera2D/DeathPanel/Panel"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -63.99997
+offset_top = -107.3333
+offset_right = 1302.6665
+offset_bottom = 559.3334
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.1, 0.1)
+texture = ExtResource("16_7lmhl")
+
 [node name="PlayerHealthUI" type="Control" parent="Camera2D"]
 layout_mode = 3
 anchors_preset = 0
@@ -518,73 +610,10 @@ theme_override_styles/fill = SubResource("StyleBoxFlat_b26j0")
 max_value = 0.0
 show_percentage = false
 
-[node name="DeathPanel" type="CanvasLayer" parent="Camera2D"]
-script = ExtResource("10_ivps1")
-
-[node name="Panel" type="Panel" parent="Camera2D/DeathPanel"]
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -133.5
-offset_top = -75.0
-offset_right = 133.5
-offset_bottom = 75.0
-grow_horizontal = 2
-grow_vertical = 2
-size_flags_horizontal = 4
-size_flags_vertical = 4
-
-[node name="RespawnButton" type="Button" parent="Camera2D/DeathPanel/Panel"]
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -4.0
-offset_top = -4.0
-offset_right = 4.0
-offset_bottom = 4.0
-grow_horizontal = 2
-grow_vertical = 2
-text = "RESPAWN"
-
-[node name="QuitButton" type="Button" parent="Camera2D/DeathPanel/Panel"]
-layout_mode = 1
-anchors_preset = 7
-anchor_left = 0.5
-anchor_top = 1.0
-anchor_right = 0.5
-anchor_bottom = 1.0
-offset_left = -23.5
-offset_top = -31.0
-offset_right = 23.5
-grow_horizontal = 2
-grow_vertical = 0
-text = "QUIT"
-
-[node name="Label" type="Label" parent="Camera2D/DeathPanel/Panel"]
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -38.0
-offset_top = -44.0
-offset_right = 38.0
-offset_bottom = -21.0
-grow_horizontal = 2
-grow_vertical = 2
-text = "YOU DIED"
-
 [node name="SwingAudio" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource("10_nvl01")
 
 [node name="HitAudio" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource("11_nvl01")
 
-[connection signal="pressed" from="Camera2D/DeathPanel/Panel/RespawnButton" to="Camera2D/DeathPanel" method="_on_respawn_button_pressed"]
 [connection signal="pressed" from="Camera2D/DeathPanel/Panel/QuitButton" to="." method="_on_quit_button_pressed"]

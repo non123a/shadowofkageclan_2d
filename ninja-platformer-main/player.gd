@@ -77,7 +77,7 @@ func start_regen():
 
 @export var attack_cooldown := 0.5
 var can_attack := true
-@onready var death_panel: CanvasLayer = $Camera2D/DeathPanel
+@onready var death_panel: TextureRect = $Camera2D/DeathPanel
 
 
 @export var stats: Stats
@@ -370,9 +370,28 @@ func start_attack() -> void:
 	await get_tree().create_timer(attack_cooldown).timeout
 	can_attack = true
 
-func _on_player_died():
-	# Stop the game
-	get_tree().paused = true
 
-	# Show death UI
+
+#func _on_player_died():
+	## Stop the game
+	#get_tree().paused = true
+#
+	## Show death UI
+	#death_panel.visible = true
+	#
+	
+func _on_player_died():
+	# 1️⃣ Stop gameplay music
+	MusicManager.stop_music()
+
+	# 2️⃣ Play death music BEFORE pausing
+	MusicManager.play_music(
+		load("res://sounding/die.mp3")
+	)
+
+	# 3️⃣ Show death UI
 	death_panel.visible = true
+
+	# 4️⃣ Pause game AFTER music starts
+	await get_tree().process_frame
+	get_tree().paused = true
