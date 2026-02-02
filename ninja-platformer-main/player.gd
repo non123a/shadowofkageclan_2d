@@ -6,7 +6,7 @@ enum STATE { MOVE, CLIMB, HIT, DASH }
 @export var dash_duration := 0.1
 @export var dash_cooldown := 1
 
-
+@onready var dash_audio: AudioStreamPlayer2D = $DashAudio
 @export var regen_delay := 10.0     # wait 10 seconds after last hit
 @export var regen_rate := 2.0       # tick every 1 second
 @export var regen_amount := 0.5     # heal 0.5 HP per tick
@@ -307,6 +307,7 @@ func start_dash() -> void:
 	can_dash = false
 	state = STATE.DASH
 	hurtbox.is_invincible = true
+	play_dash_sound() 
 
 	var dir: int = sign(anchor.scale.x)
 	if dir == 0:
@@ -370,16 +371,6 @@ func start_attack() -> void:
 	await get_tree().create_timer(attack_cooldown).timeout
 	can_attack = true
 
-
-
-#func _on_player_died():
-	## Stop the game
-	#get_tree().paused = true
-#
-	## Show death UI
-	#death_panel.visible = true
-	#
-	
 func _on_player_died():
 	# 1️⃣ Stop gameplay music
 	MusicManager.stop_music()
@@ -395,3 +386,9 @@ func _on_player_died():
 	# 4️⃣ Pause game AFTER music starts
 	await get_tree().process_frame
 	get_tree().paused = true
+func play_dash_sound():
+	if not dash_audio:
+		return
+
+	dash_audio.pitch_scale = randf_range(0.9, 1.1)
+	dash_audio.play()

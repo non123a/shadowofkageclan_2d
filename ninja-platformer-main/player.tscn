@@ -1,4 +1,4 @@
-[gd_scene load_steps=42 format=3 uid="uid://bl7cbq2ma5mjj"]
+[gd_scene load_steps=43 format=3 uid="uid://bl7cbq2ma5mjj"]
 
 [ext_resource type="Script" uid="uid://b4xqkm8dmmdgk" path="res://player.gd" id="1_i3pqv"]
 [ext_resource type="Script" uid="uid://2i8vukneqwu1" path="res://stats.gd" id="2_1jxqw"]
@@ -18,6 +18,7 @@
 [ext_resource type="Texture2D" uid="uid://c0jx70vji5h11" path="res://Background/quit_normal.png" id="14_5tmop"]
 [ext_resource type="Texture2D" uid="uid://nlxshp010dyq" path="res://Background/quit_hover.png" id="15_7ahtn"]
 [ext_resource type="Texture2D" uid="uid://d20v02yijfkl7" path="res://Background/youDied.png" id="16_7lmhl"]
+[ext_resource type="AudioStream" uid="uid://bb6ck1odlg4ml" path="res://sounding/Teleport DBZ - Sound Effect HD.wav" id="19_pylmc"]
 
 [sub_resource type="Resource" id="Resource_nvl01"]
 script = ExtResource("2_1jxqw")
@@ -615,5 +616,8 @@ stream = ExtResource("10_nvl01")
 
 [node name="HitAudio" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource("11_nvl01")
+
+[node name="DashAudio" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("19_pylmc")
 
 [connection signal="pressed" from="Camera2D/DeathPanel/Panel/QuitButton" to="." method="_on_quit_button_pressed"]
