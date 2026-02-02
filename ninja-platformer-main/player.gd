@@ -29,6 +29,7 @@ var dash_direction := 1
 
 
 func _on_regen_tick():
+	
 	if not regen_active:
 		return
 
@@ -76,6 +77,7 @@ func start_regen():
 
 @export var attack_cooldown := 0.5
 var can_attack := true
+@onready var death_panel: CanvasLayer = $Camera2D/DeathPanel
 
 
 @export var stats: Stats
@@ -112,6 +114,8 @@ func _on_hitbox_hit(hurtbox: Hurtbox) -> void:
 func _ready() -> void:
 	if stats:
 		stats.health = stats.max_health
+		
+	death_panel.visible = false
 	regen_delay_timer = Timer.new()
 	regen_delay_timer.one_shot = true
 	regen_delay_timer.wait_time = regen_delay
@@ -367,4 +371,8 @@ func start_attack() -> void:
 	can_attack = true
 
 func _on_player_died():
-	get_tree().reload_current_scene()
+	# Stop the game
+	get_tree().paused = true
+
+	# Show death UI
+	death_panel.visible = true

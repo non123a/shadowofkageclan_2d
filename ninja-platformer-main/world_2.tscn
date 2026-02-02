@@ -1239,7 +1239,6 @@ tile_map_data = PackedByteArray("AAAAAAMAAAAQAAsAAAABAAMAAAAIAAoAAAABAAgAAAAMABI
 tile_set = SubResource("TileSet_yoy7d")
 
 [node name="ParallaxBackground" type="ParallaxBackground" parent="."]
-visible = false
 
 [node name="ParallaxLayer" type="ParallaxLayer" parent="ParallaxBackground"]
 position = Vector2(0, 100)
