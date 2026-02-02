@@ -16,7 +16,7 @@ enum STATE {
 
 @export var intro_delay := 2.0
 @export var dodge_cooldown := 3.0
-
+@onready var dash_audio: AudioStreamPlayer2D = $DashAudio
 var can_dodge := true
 var intro_done := false
 
@@ -62,10 +62,6 @@ func _ready():
 		if stats == null:
 			return
 
-		# === DODGE IF AVAILABLE ===
-		#if can_dodge:
-			#dodge_back()
-			#return
 		if can_dodge and state != STATE.DODGE and state != STATE.DASH_ATTACK:
 			dodge_back()
 			return
@@ -200,27 +196,18 @@ func start_intro() -> void:
 	await get_tree().create_timer(intro_delay).timeout
 	intro_done = true
 	state = STATE.DASH_ATTACK
-#func dash_to_player():
-	#if not player:
-		#return
-#
-	#state = STATE.DASH_ATTACK
-#
-	#var dir : int =sign(player.global_position.x - global_position.x)
-	#anchor.scale.x = dir
-#
-	#velocity.x = dir * dash_speed
-	#await get_tree().create_timer(0.15).timeout
-#
-	#velocity.x = 0
-	#state = STATE.ATTACK
-	#attack()
+
 
 func dash_to_player() -> void:
 	if not player:
 		return
 
 	state = STATE.DASH_ATTACK
+	if not dash_audio:
+		return
+
+	dash_audio.pitch_scale = randf_range(0.85, 1.05) # heavier feel
+	dash_audio.play()
 
 	var dir: int = sign(player.global_position.x - global_position.x)
 	if dir == 0:
