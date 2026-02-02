@@ -18,7 +18,7 @@ config/icon="res://icon.svg"
 [autoload]
 
 MusicManager="*res://MusicManager.gd"
-GameManager="*res://GameManager.gd"
+DeathUI="*res://death_panel.tscn"
 
 [display]
 
@@ -32,6 +32,7 @@ window/vsync/vsync_mode=0
 [global_group]
 
 player=""
+game_world=""
 
 [input]
 

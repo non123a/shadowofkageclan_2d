@@ -109,17 +109,9 @@ var coyote_time: = 0.0
 func _on_hitbox_hit(hurtbox: Hurtbox) -> void:
 	play_hit_sound()
 
-func move_to_spawn_point():
-	if GameManager.next_spawn_id == "":
-		return
-
-	for spawn in get_tree().get_nodes_in_group("spawn_point"):
-		if spawn.spawn_id == GameManager.next_spawn_id:
-			global_position = spawn.global_position
-			break
-
 func _ready() -> void:
-	move_to_spawn_point()
+	if stats:
+		stats.health = stats.max_health
 	regen_delay_timer = Timer.new()
 	regen_delay_timer.one_shot = true
 	regen_delay_timer.wait_time = regen_delay
@@ -139,14 +131,11 @@ func _ready() -> void:
 		health_bar.value = stats.health
 		stats.health_changed.connect(_on_health_changed)
 
-	stats.no_health.connect(func():
-		camera_2d.reparent(get_tree().current_scene)
-		queue_free()
-	)
-	stats.no_health.connect(func():
-		camera_2d.reparent(get_tree().current_scene)
-		queue_free()
-	)
+	#stats.no_health.connect(func():
+		#camera_2d.reparent(get_tree().current_scene)
+		#queue_free()
+	#)
+	stats.no_health.connect(_on_player_died)
 	start_regen_delay()
 
 	sprite_lower.material.set_shader_parameter("flash_color", Color("ff4d4d"))
@@ -172,8 +161,7 @@ func _ready() -> void:
 		shaker_lower.shake(3, 0.3)
 		animation_player_lower.play("jump")
 		effects_animation_player.play("hitflash")
-		#stats.health -= other_hitbox.damage
-		# STOP regen immediately when hit
+
 		stop_regen()
 
 		stats.health -= other_hitbox.damage
@@ -308,80 +296,6 @@ func _on_health_changed(current: int, max: int) -> void:
 		0.25
 	)
 
-
-
-
-#func start_dash() -> void:
-	#if not can_dash:
-		#return
-#
-	#can_dash = false
-	#state = STATE.DASH
-#
-	## Invincibility
-	#hurtbox.is_invincible = true
-	#spawn_afterimage()
-#
-	## Facing direction
-	#var dir3: int = sign(anchor.scale.x)
-	#if dir3 == 0:
-		#dir3 = 1
-#
-	## Teleport distance
-	#var dash_distance: float = 80.0
-#
-	## TELEPORT
-	#global_position.x += dir3 * dash_distance
-#
-	## Small pause for impact
-	#await get_tree().create_timer(0.05).timeout
-#
-	## End dash
-	#state = STATE.MOVE
-	#hurtbox.is_invincible = false
-#
-	## Cooldown
-	#await get_tree().create_timer(dash_cooldown).timeout
-	#can_dash = true
-#func start_dash() -> void:
-	#if not can_dash:
-		#return
-#
-	#can_dash = false
-	#state = STATE.DASH
-	#hurtbox.is_invincible = true
-#
-	#var dir: int = sign(anchor.scale.x)
-	#if dir == 0:
-		#dir = 1
-#
-	#var dash_distance: float = 80.0
-	#var dash_frames: int = 10
-	#var dash_step: float = dash_distance / dash_frames
-	#var frame_delay: float = 0.01
-#
-	## Optional: hide real body during dash
-	#anchor.visible = false
-#
-	#for i in range(dash_frames):
-		## Move a little
-		#global_position.x += dir * dash_step
-#
-		## Spawn one frame
-		#spawn_afterimage()
-#
-		## Wait one frame slice
-		#await get_tree().create_timer(frame_delay).timeout
-#
-	## Reappear at the end
-	#anchor.visible = true
-#
-	#state = STATE.MOVE
-	#hurtbox.is_invincible = false
-#
-	#await get_tree().create_timer(dash_cooldown).timeout
-	#can_dash = true
-
 func start_dash() -> void:
 	if not can_dash:
 		return
@@ -414,18 +328,6 @@ func start_dash() -> void:
 	await get_tree().create_timer(dash_cooldown).timeout
 	can_dash = true
 
-#func spawn_afterimage() -> void:
-	#var ghost := anchor.duplicate()
-	#ghost.modulate = Color(1, 1, 1, 0.5)
-	#ghost.scale = anchor.scale
-	#ghost.z_index = anchor.z_index - 1
-#
-	#get_parent().add_child(ghost)
-	#ghost.global_position = anchor.global_position
-#
-	#var tween := create_tween()
-	#tween.tween_property(ghost, "modulate:a", 0.0, 0.15)
-	#tween.tween_callback(ghost.queue_free)
 func spawn_afterimage() -> void:
 	var ghost: Node2D = anchor.duplicate()
 
@@ -463,3 +365,6 @@ func start_attack() -> void:
 	# Cooldown
 	await get_tree().create_timer(attack_cooldown).timeout
 	can_attack = true
+
+func _on_player_died():
+	get_tree().reload_current_scene()

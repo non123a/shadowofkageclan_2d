@@ -1,4 +1,4 @@
-[gd_scene load_steps=25 format=4 uid="uid://b6jqdqmnr2cqf"]
+[gd_scene load_steps=24 format=4 uid="uid://b6jqdqmnr2cqf"]
 
 [ext_resource type="Script" uid="uid://dephygc4nk1vv" path="res://world.gd" id="1_aqk2v"]
 [ext_resource type="PackedScene" uid="uid://bl7cbq2ma5mjj" path="res://player.tscn" id="1_fj7yv"]
@@ -16,7 +16,6 @@
 [ext_resource type="PackedScene" uid="uid://rsd74dj400hc" path="res://enemy.tscn" id="14_70uel"]
 [ext_resource type="PackedScene" uid="uid://bxgl1x4tatpqj" path="res://enemy_cannon.tscn" id="15_hiqwa"]
 [ext_resource type="Script" uid="uid://c6qr0ac5to621" path="res://portal.gd" id="16_udxuc"]
-[ext_resource type="Script" uid="uid://po5wop4dl8fe" path="res://spawn_level_1_start.gd" id="17_ikiii"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_hiqwa"]
 texture = ExtResource("4_2o6r5")
@@ -609,8 +608,8 @@ sources/1 = SubResource("TileSetAtlasSource_udxuc")
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_70uel"]
 size = Vector2(41, 1252.5)
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_cbp6q"]
-size = Vector2(30, 29)
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_2u3nc"]
+size = Vector2(20, 62)
 
 [node name="World" type="Node2D"]
 script = ExtResource("1_aqk2v")
@@ -626,7 +625,7 @@ position = Vector2(918, 230)
 patrol_range = 40.0
 
 [node name="Player" parent="." instance=ExtResource("1_fj7yv")]
-position = Vector2(2842, 215)
+position = Vector2(2702, 150)
 jump_amount = 200
 
 [node name="Boss" parent="." instance=ExtResource("4_70uel")]
@@ -761,14 +760,12 @@ position = Vector2(2591, -187)
 position = Vector2(1280, 231)
 
 [node name="Portal" type="Area2D" parent="."]
-position = Vector2(2895, 186)
+position = Vector2(2897, 206)
+collision_mask = 2
 script = ExtResource("16_udxuc")
-target_spawn_id = "level2_start"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Portal"]
-position = Vector2(17, 22)
-shape = SubResource("RectangleShape2D_cbp6q")
+position = Vector2(9, -6)
+shape = SubResource("RectangleShape2D_2u3nc")
 
-[node name="Spawn_level1_start" type="Node2D" parent="."]
-script = ExtResource("17_ikiii")
-spawn_id = "level1_start"
+[connection signal="body_entered" from="Portal" to="Portal" method="_on_body_entered"]
