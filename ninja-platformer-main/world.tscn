@@ -20,8 +20,6 @@
 
 [sub_resource type="Resource" id="Resource_udxuc"]
 script = ExtResource("5_2u3nc")
-max_health = 2
-health = 2
 metadata/_custom_type_script = "uid://2i8vukneqwu1"
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_hiqwa"]
