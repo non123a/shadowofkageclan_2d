@@ -10,7 +10,7 @@ enum STATE {
 	INTRO
 }
 @export var max_health := 10
-
+var arena_locked := false
 @export var dash_speed := 400.0
 @export var dash_distance := 120.0
 
@@ -84,6 +84,7 @@ func _ready():
 			health_bar.value = stats.health
 
 		if stats.health <= 0:
+			unlock_arena()
 			queue_free()
 	)
 	
@@ -230,6 +231,10 @@ func _on_body_entered(body):
 	print("Detected body:", body.name)
 
 	if body is CharacterBody2D and body.is_in_group("player"):
+		print("BOSS FIGHT START")
+		lock_arena()
+		arena_locked = true
+		
 		player = body
 		state = STATE.INTRO
 		start_intro()
@@ -243,23 +248,6 @@ func _on_body_exited(body):
 		state = STATE.IDLE
 		
 	
-#func dodge_back() -> void:
-	#if not player or not can_dodge:
-		#return
-#
-	#can_dodge = false
-	#state = STATE.DODGE
-#
-	#var dir4: int = sign(global_position.x - player.global_position.x)
-	#if dir4 == 0:
-		#dir4 = 1
-#
-	#velocity.x = dir4 * dash_speed
-	#await get_tree().create_timer(0.15).timeout
-	#velocity.x = 0
-#
-	#state = STATE.CHASE
-	#start_dodge_cooldown()
 
 func dodge_back() -> void:
 	if not player or not can_dodge:
@@ -303,3 +291,22 @@ func spawn_afterimage() -> void:
 	var tween := create_tween()
 	tween.tween_property(ghost, "modulate:a", 0.0, 0.2)
 	tween.tween_callback(ghost.queue_free)
+
+
+func lock_arena():
+	print("LOCK ARENA")
+
+	for wall in get_tree().get_nodes_in_group("boss_arena_wall"):
+		wall.visible = true
+		for child in wall.get_children():
+			if child is CollisionShape2D:
+				child.set_deferred("disabled", false)
+				
+func unlock_arena():
+	print("UNLOCK ARENA")
+
+	for wall in get_tree().get_nodes_in_group("boss_arena_wall"):
+		wall.visible = false
+		for child in wall.get_children():
+			if child is CollisionShape2D:
+				child.set_deferred("disabled", true)

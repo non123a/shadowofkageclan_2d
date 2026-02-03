@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=4 uid="uid://bugmbkqe85gk5"]
+[gd_scene load_steps=13 format=4 uid="uid://bugmbkqe85gk5"]
 
 [ext_resource type="PackedScene" uid="uid://bl7cbq2ma5mjj" path="res://player.tscn" id="1_mv2s0"]
 [ext_resource type="Texture2D" uid="uid://cxhuc0tppega4" path="res://PixelFantasy_Caves_1.0/mainlev_build.png" id="2_wys1n"]
@@ -1240,6 +1240,9 @@ texture = ExtResource("2_wys1n")
 physics_layer_0/collision_layer = 1
 sources/0 = SubResource("TileSetAtlasSource_q40lw")
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_yuvu5"]
+size = Vector2(61, 289)
+
 [node name="World2" type="Node2D"]
 script = SubResource("GDScript_yuvu5")
 
@@ -1251,7 +1254,6 @@ tile_map_data = PackedByteArray("AAAAAAMAAAAQAAsAAAABAAMAAAAIAAoAAAABAAgAAAAMABI
 tile_set = SubResource("TileSet_yoy7d")
 
 [node name="ParallaxBackground" type="ParallaxBackground" parent="."]
-visible = false
 
 [node name="ParallaxLayer" type="ParallaxLayer" parent="ParallaxBackground"]
 position = Vector2(0, 100)
@@ -1320,3 +1322,16 @@ attack_cooldown = 2.0
 
 [node name="Final Boss" parent="." instance=ExtResource("8_yuvu5")]
 position = Vector2(1411, 129)
+
+[node name="ArenaWall" type="StaticBody2D" parent="." groups=["boss_arena_wall"]]
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ArenaWall"]
+position = Vector2(1070, 55)
+shape = SubResource("RectangleShape2D_yuvu5")
+disabled = true
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="ArenaWall"]
+position = Vector2(1628, 53)
+shape = SubResource("RectangleShape2D_yuvu5")
+disabled = true
