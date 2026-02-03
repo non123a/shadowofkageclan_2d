@@ -14,6 +14,10 @@ var arena_locked := false
 @export var dash_speed := 400.0
 @export var dash_distance := 120.0
 
+var dash_timer := 0.0
+var dash_duration := 0.15
+
+
 @export var intro_delay := 2.0
 @export var dodge_cooldown := 3.0
 @onready var dash_audio: AudioStreamPlayer2D = $DashAudio
@@ -199,33 +203,56 @@ func start_intro() -> void:
 	state = STATE.DASH_ATTACK
 
 
+#func dash_to_player() -> void:
+	#if not player:
+		#return
+#
+	#state = STATE.DASH_ATTACK
+	#if not dash_audio:
+		#return
+#
+	#dash_audio.pitch_scale = randf_range(0.85, 1.05) # heavier feel
+	#dash_audio.play()
+#
+	#var dir: int = sign(player.global_position.x - global_position.x)
+	#if dir == 0:
+		#dir = 1
+	#anchor.scale.x = dir
+#
+	#var dash_frames := 8
+	#var step := dash_distance / dash_frames
+#
+	#for i in range(dash_frames):
+		#spawn_afterimage()
+		#global_position.x += dir * step
+		#await get_tree().create_timer(0.02).timeout
+#
+	#state = STATE.ATTACK
+	#attack()
 func dash_to_player() -> void:
 	if not player:
+		state = STATE.CHASE
 		return
 
-	state = STATE.DASH_ATTACK
-	if not dash_audio:
-		return
+	if dash_timer <= 0:
+		# Start dash
+		var dir: int = sign(player.global_position.x - global_position.x)
+		if dir == 0:
+			dir = 1
 
-	dash_audio.pitch_scale = randf_range(0.85, 1.05) # heavier feel
-	dash_audio.play()
+		anchor.scale.x = dir
+		velocity.x = dir * dash_speed
+		dash_timer = dash_duration
 
-	var dir: int = sign(player.global_position.x - global_position.x)
-	if dir == 0:
-		dir = 1
-	anchor.scale.x = dir
+		if dash_audio:
+			dash_audio.play()
 
-	var dash_frames := 8
-	var step := dash_distance / dash_frames
+	dash_timer -= get_physics_process_delta_time()
 
-	for i in range(dash_frames):
-		spawn_afterimage()
-		global_position.x += dir * step
-		await get_tree().create_timer(0.02).timeout
-
-	state = STATE.ATTACK
-	attack()
-
+	if dash_timer <= 0:
+		velocity.x = 0
+		state = STATE.ATTACK
+		attack()
 
 func _on_body_entered(body):
 	print("Detected body:", body.name)
