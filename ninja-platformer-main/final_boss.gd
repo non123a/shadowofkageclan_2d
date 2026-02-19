@@ -1,4 +1,5 @@
 extends CharacterBody2D
+var is_dead := false
 
 enum STATE {
 	IDLE,
@@ -88,8 +89,11 @@ func _ready():
 			health_bar.value = stats.health
 
 		if stats.health <= 0:
-			unlock_arena()
-			queue_free()
+			#await boss_defeated()
+			#unlock_arena()
+			#queue_free()
+			is_dead = true
+			await boss_defeated()
 	)
 	
 
@@ -98,6 +102,8 @@ func _ready():
 
 
 func _physics_process(delta):
+	if is_dead:
+		return
 	if not is_on_floor():
 		velocity.y += gravity * delta
 
@@ -202,33 +208,6 @@ func start_intro() -> void:
 	intro_done = true
 	state = STATE.DASH_ATTACK
 
-
-#func dash_to_player() -> void:
-	#if not player:
-		#return
-#
-	#state = STATE.DASH_ATTACK
-	#if not dash_audio:
-		#return
-#
-	#dash_audio.pitch_scale = randf_range(0.85, 1.05) # heavier feel
-	#dash_audio.play()
-#
-	#var dir: int = sign(player.global_position.x - global_position.x)
-	#if dir == 0:
-		#dir = 1
-	#anchor.scale.x = dir
-#
-	#var dash_frames := 8
-	#var step := dash_distance / dash_frames
-#
-	#for i in range(dash_frames):
-		#spawn_afterimage()
-		#global_position.x += dir * step
-		#await get_tree().create_timer(0.02).timeout
-#
-	#state = STATE.ATTACK
-	#attack()
 func dash_to_player() -> void:
 	if not player:
 		state = STATE.CHASE
@@ -337,3 +316,24 @@ func unlock_arena():
 		for child in wall.get_children():
 			if child is CollisionShape2D:
 				child.set_deferred("disabled", true)
+
+
+func boss_defeated() -> void:
+	hitbox.monitoring = false
+	velocity = Vector2.ZERO
+
+	# Stop boss music smoothly
+	await MusicManager.stop_music(true)
+
+	# Play victory / calm music
+	MusicManager.play_music(
+		load("res://sounding/boss_final_die.mp3"),
+		true
+	)
+
+	unlock_arena()
+
+	# Optional small delay before boss disappears
+	await get_tree().create_timer(1.0).timeout
+
+	queue_free()

@@ -1,4 +1,4 @@
-[gd_scene load_steps=26 format=4 uid="uid://b6jqdqmnr2cqf"]
+[gd_scene load_steps=27 format=4 uid="uid://b6jqdqmnr2cqf"]
 
 [ext_resource type="Script" uid="uid://dephygc4nk1vv" path="res://world.gd" id="1_aqk2v"]
 [ext_resource type="PackedScene" uid="uid://bl7cbq2ma5mjj" path="res://player.tscn" id="1_fj7yv"]
@@ -17,6 +17,7 @@
 [ext_resource type="PackedScene" uid="uid://rsd74dj400hc" path="res://enemy.tscn" id="14_70uel"]
 [ext_resource type="PackedScene" uid="uid://bxgl1x4tatpqj" path="res://enemy_cannon.tscn" id="15_hiqwa"]
 [ext_resource type="Script" uid="uid://c6qr0ac5to621" path="res://portal.gd" id="16_udxuc"]
+[ext_resource type="Texture2D" uid="uid://c8orge4q1a3j" path="res://Background/minecraft.png" id="18_ikiii"]
 
 [sub_resource type="Resource" id="Resource_udxuc"]
 script = ExtResource("5_2u3nc")
@@ -614,7 +615,7 @@ sources/1 = SubResource("TileSetAtlasSource_udxuc")
 size = Vector2(41, 1252.5)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_2u3nc"]
-size = Vector2(20, 62)
+size = Vector2(32, 37)
 
 [node name="World" type="Node2D"]
 script = ExtResource("1_aqk2v")
@@ -630,7 +631,7 @@ position = Vector2(918, 230)
 patrol_range = 40.0
 
 [node name="Player" parent="." instance=ExtResource("1_fj7yv")]
-position = Vector2(2702, 150)
+position = Vector2(101, 217)
 stats = SubResource("Resource_udxuc")
 jump_amount = 200
 
@@ -771,7 +772,12 @@ collision_mask = 2
 script = ExtResource("16_udxuc")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Portal"]
-position = Vector2(9, -6)
+position = Vector2(15, -0.5)
 shape = SubResource("RectangleShape2D_2u3nc")
+
+[node name="Sprite2D" type="Sprite2D" parent="Portal"]
+position = Vector2(14, -3.9999933)
+scale = Vector2(0.0640625, 0.069999985)
+texture = ExtResource("18_ikiii")
 
 [connection signal="body_entered" from="Portal" to="Portal" method="_on_body_entered"]

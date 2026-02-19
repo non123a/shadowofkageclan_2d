@@ -1,0 +1,135 @@
+[gd_scene load_steps=3 format=3 uid="uid://bpskaxahqrbxy"]
+
+[ext_resource type="Script" uid="uid://hmhxw3ddw21x" path="res://ending_scene.gd" id="1_tq3pf"]
+[ext_resource type="AudioStream" uid="uid://fqndtk7702ck" path="res://sounding/game_ending_producer.mp3" id="2_s5fav"]
+
+[node name="Node2D" type="Node2D"]
+script = ExtResource("1_tq3pf")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+offset_right = 318.0
+offset_bottom = 180.0
+color = Color(0.006885395, 0.0068853963, 0.006885395, 1)
+
+[node name="ScrollContainer" type="ScrollContainer" parent="."]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 64.0
+offset_top = -657.5
+offset_right = 323.0
+offset_bottom = 824.5
+grow_horizontal = 2
+grow_vertical = 2
+horizontal_scroll_mode = 0
+vertical_scroll_mode = 0
+
+[node name="Label" type="Label" parent="ScrollContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 8
+text = "
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Shadow of the Kage Clan
+
+
+The blade has fallen.
+
+The silence after battle is heavier than the fight itself.
+
+I thought victory would feel like fire...
+But it feels like ash.
+
+She is safe.
+
+That was the mission.
+That was the promise.
+
+Yet why does my heart feel so empty?
+
+The shadows that raised me
+do not disappear with one enemy.
+
+They follow.
+They whisper.
+
+Maybe this is not the end of the clan.
+Maybe it is the beginning of something new.
+
+For the first time,
+I choose my own path.
+
+Not as a weapon.
+Not as a shadow.
+
+But as myself.
+The war has ended.
+The shadow fades...
+
+But peace is only temporary.
+
+Produced by:
+Chhanon Teng The goat
+
+Thank you for playing.
+"
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("2_s5fav")
+autoplay = true
+parameters/looping = true

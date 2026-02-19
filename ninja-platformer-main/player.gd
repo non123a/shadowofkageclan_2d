@@ -7,9 +7,9 @@ enum STATE { MOVE, CLIMB, HIT, DASH }
 @export var dash_cooldown := 1
 
 @onready var dash_audio: AudioStreamPlayer2D = $DashAudio
-@export var regen_delay := 10.0     # wait 10 seconds after last hit
+@export var regen_delay := 7.0     # wait 10 seconds after last hit
 @export var regen_rate := 2.0       # tick every 1 second
-@export var regen_amount := 0.5     # heal 0.5 HP per tick
+@export var regen_amount := 1.5     # heal 0.5 HP per tick
 
 
 
