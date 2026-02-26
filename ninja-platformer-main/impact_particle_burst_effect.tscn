@@ -1,7 +1,7 @@
-[gd_scene load_steps=8 format=3 uid="uid://uoeft17mgaho"]
+[gd_scene load_steps=8 format=3 uid="uid://qyk64mo0esep"]
 
-[ext_resource type="Script" uid="uid://b4cl0tj8eteux" path="res://particle_burst.gd" id="1_cmd1t"]
-[ext_resource type="Texture2D" uid="uid://kgfr5ltw6chr" path="res://impact_effect.png" id="1_k43q3"]
+[ext_resource type="Script" path="res://particle_burst.gd" id="1_cmd1t"]
+[ext_resource type="Texture2D" path="res://impact_effect.png" id="1_k43q3"]
 
 [sub_resource type="Gradient" id="Gradient_7ffuc"]
 colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0)
