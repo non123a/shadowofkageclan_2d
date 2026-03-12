@@ -620,13 +620,13 @@ size = Vector2(32, 37)
 [node name="World" type="Node2D"]
 script = ExtResource("1_aqk2v")
 
-[node name="enemy" parent="." instance=ExtResource("14_70uel")]
+[node name="enemy" parent="." groups=["enemy"] instance=ExtResource("14_70uel")]
 position = Vector2(374, 183)
 
-[node name="enemy2" parent="." instance=ExtResource("14_70uel")]
+[node name="enemy2" parent="." groups=["enemy"] instance=ExtResource("14_70uel")]
 position = Vector2(684, 230)
 
-[node name="enemy3" parent="." instance=ExtResource("14_70uel")]
+[node name="enemy3" parent="." groups=["enemy"] instance=ExtResource("14_70uel")]
 position = Vector2(918, 230)
 patrol_range = 40.0
 
@@ -635,15 +635,15 @@ position = Vector2(101, 217)
 stats = SubResource("Resource_udxuc")
 jump_amount = 200
 
-[node name="Boss" parent="." instance=ExtResource("4_70uel")]
+[node name="Boss" parent="." groups=["enemy"] instance=ExtResource("4_70uel")]
 position = Vector2(1510, 227)
 rotation = -6.2831855
 
-[node name="Boss2" parent="." instance=ExtResource("4_70uel")]
+[node name="Boss2" parent="." groups=["enemy"] instance=ExtResource("4_70uel")]
 position = Vector2(2098, 228)
 rotation = -6.2831855
 
-[node name="Boss3" parent="." instance=ExtResource("4_70uel")]
+[node name="Boss3" parent="." groups=["enemy"] instance=ExtResource("4_70uel")]
 position = Vector2(2210, 228)
 rotation = -6.2831855
 

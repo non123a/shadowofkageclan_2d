@@ -32,6 +32,7 @@ var player: CharacterBody2D = null
 @onready var hitbox: Area2D = $Anchor/Hitbox
 @onready var anchor: Node2D = $Anchor
 func die():
+	get_parent().enemy_died(self)
 	queue_free()
 
 func _ready():

@@ -79,6 +79,7 @@ func _ready():
 		print("Enemy hit! Health:", stats.health)
 
 		if stats.health <= 0:
+			get_parent().enemy_died(self)
 			queue_free()
 	)
 
