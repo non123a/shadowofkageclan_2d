@@ -18,7 +18,6 @@ config/icon="res://icon.svg"
 [autoload]
 
 MusicManager="*res://MusicManager.gd"
-DeathUI="*res://death_panel.tscn"
 
 [display]
 

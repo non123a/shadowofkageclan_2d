@@ -20,8 +20,13 @@ func _ready() -> void:
 func open_portal():
 	is_open = true
 	print("portal opened")
+	
+#var world2 = preload("res://world_2.tscn")
 
 func _on_body_entered(body):
 	if body.is_in_group("player") and is_open:
 		print("detect player")
-		get_tree().change_scene_to_file(target_scene)
+		var world2 = preload("res://world_2.tscn")
+
+		#get_tree().change_scene_to_file(target_scene)
+		get_tree().change_scene_to_packed(world2)
