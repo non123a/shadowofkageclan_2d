@@ -77,7 +77,7 @@ func _ready():
 			health_bar.value = stats.health
 
 		print("Enemy hit! Health:", stats.health)
-
+		print("Damage received:", other_hitbox.damage)
 		if stats.health <= 0:
 			get_parent().enemy_died(self)
 			queue_free()

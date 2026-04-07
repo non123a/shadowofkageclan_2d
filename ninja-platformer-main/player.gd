@@ -11,8 +11,37 @@ enum STATE { MOVE, CLIMB, HIT, DASH }
 @export var regen_rate := 2.0       # tick every 1 second
 @export var regen_amount := 1.5     # heal 0.5 HP per tick
 
+@export var shuriken_scene: PackedScene
+#
+#func throw_shuriken():
+	#var shuriken = shuriken_scene.instantiate()
+	#shuriken.position = position
+	#shuriken.direction = Vector2.RIGHT # change based on player facing
+	#get_tree().current_scene.add_child(shuriken)
+	#
+#func throw_shuriken():
+	#var shuriken = shuriken_scene.instantiate()
+	#shuriken.position = position
+	#shuriken.direction = Vector2(anchor.scale.x, 0)
+	#get_tree().current_scene.add_child(shuriken)
+var can_throw := true
 
+func throw_shuriken():
+	if not can_throw:
+		return
 
+	can_throw = false
+
+	var shuriken = shuriken_scene.instantiate()
+	#shuriken.position = position
+	shuriken.global_position = global_position + Vector2(anchor.scale.x * 10, -13)
+	shuriken.direction = Vector2(anchor.scale.x, 0)
+	get_tree().current_scene.add_child(shuriken)
+
+	await get_tree().create_timer(0.5).timeout
+	can_throw = true
+	
+	
 var regen_active := false
 var regen_delay_timer: Timer
 var regen_tick_timer: Timer
@@ -193,7 +222,9 @@ func _physics_process(delta: float) -> void:
 			if Input.is_action_just_pressed("attack") and can_attack:
 				#animation_player_upper.play("attack")
 				start_attack()
-			
+			if Input.is_action_just_pressed("throw"):
+				throw_shuriken()
+				
 			if x_input == 0:
 				apply_friction(delta)
 				animation_player_lower.play("stand")

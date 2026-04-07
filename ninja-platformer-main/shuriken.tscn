@@ -1,0 +1,32 @@
+[gd_scene load_steps=6 format=3 uid="uid://bkumpeokxngtq"]
+
+[ext_resource type="Script" uid="uid://hq0xv0y6qfn3" path="res://shuriken.gd" id="1_foqx7"]
+[ext_resource type="Texture2D" uid="uid://0oxxjosgimrp" path="res://Background/Shuriken pronta.png" id="2_tu8ef"]
+[ext_resource type="Script" uid="uid://cqxr3go31xf5c" path="res://hitbox.gd" id="3_56gbp"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_56gbp"]
+radius = 6.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_jnlsw"]
+radius = 6.0
+
+[node name="Node2D" type="Area2D"]
+collision_mask = 2
+script = ExtResource("1_foqx7")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+scale = Vector2(0.008695955, 0.008602151)
+texture = ExtResource("2_tu8ef")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_56gbp")
+
+[node name="Hitbox" type="Area2D" parent="."]
+collision_mask = 18
+script = ExtResource("3_56gbp")
+metadata/_custom_type_script = "uid://cqxr3go31xf5c"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox"]
+shape = SubResource("CircleShape2D_jnlsw")
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
